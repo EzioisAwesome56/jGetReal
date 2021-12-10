@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GifCaptioner {
@@ -43,6 +44,9 @@ public class GifCaptioner {
         // make stream to write byte array
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), out);
+        byte[] dank = out.toByteArray();
+        out.flush();
+        GIFTweaker.insertComments(new ByteArrayInputStream(dank), out, Collections.singletonList("This gif was produced using jGetReal!"));
         byte[] returnvar = out.toByteArray();
         out.close();
         return returnvar;
