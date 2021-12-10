@@ -48,15 +48,14 @@ public class GifCaptioner {
             list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, gf.getDisposalMethod()));
         }
         stream.close();
+        // reset stream so you can write to it
+        helloneath.reset();
+        GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), helloneath);
+        byte[] dank = helloneath.toByteArray();
+        helloneath.reset();
+        GIFTweaker.insertComments(new ByteArrayInputStream(dank), helloneath, Collections.singletonList("This gif was produced using jGetReal!"));
+        byte[] returnvar = helloneath.toByteArray();
         helloneath.close();
-        // make stream to write byte array
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), out);
-        byte[] dank = out.toByteArray();
-        out.reset();
-        GIFTweaker.insertComments(new ByteArrayInputStream(dank), out, Collections.singletonList("This gif was produced using jGetReal!"));
-        byte[] returnvar = out.toByteArray();
-        out.close();
         return returnvar;
     }
 }
