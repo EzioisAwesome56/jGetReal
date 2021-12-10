@@ -3,7 +3,6 @@ package com.eziosoft.jgetreal.Raster;
 import com.eziosoft.jgetreal.utils.RasterUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
