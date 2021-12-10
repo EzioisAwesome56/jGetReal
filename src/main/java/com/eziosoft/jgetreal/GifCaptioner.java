@@ -32,7 +32,7 @@ public class GifCaptioner {
         for (GIFFrame gf : cont.getFrames()){
             stream.close();
             ByteArrayOutputStream helloneath = new ByteArrayOutputStream();
-            ImageIO.write(gf.getFrame(), "gif", helloneath);
+            ImageIO.write(gf.getFrame(), "png", helloneath);
             stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
             helloneath.flush();
             helloneath.close();
