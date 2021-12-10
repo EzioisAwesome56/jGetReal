@@ -1,5 +1,7 @@
 package com.eziosoft.jgetreal.Raster;
 
+import com.eziosoft.jgetreal.utils.RasterUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -37,32 +39,6 @@ public class Caption {
     }
 
     /**
-     * converts an image to jpeg format
-     * @param in byte array of image to convert
-     * @return byte array of image to convert; jpeg format
-     * @throws IOException incase something blows up, imageio will probably throw io exception
-     */
-    public static byte[] convertToJpeg(byte[] in) throws IOException{
-        ImageIO.setUseCache(false);
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
-        // create canvas buffered image and also graphics2d instance
-        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = out.createGraphics();
-        // draw image
-        g.drawImage(source, 0, 0, new Color(0f, 0f, 0f), null);
-        // throw graphics2d away
-        g.dispose();
-        // write output image to stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(out, "jpg", stream);
-        // convert to byte array and close stream
-        byte[] fuck = stream.toByteArray();
-        stream.close();
-        // return
-        return fuck;
-    }
-
-    /**
      * captions an image, returns in jpeg format
      * @param image byte array of image to caption
      * @param text caption text
@@ -70,7 +46,7 @@ public class Caption {
      * @throws IOException if something blows up
      */
     public static byte[] captionAsJpeg(byte[] image, String text) throws IOException {
-        return convertToJpeg(captionImage(image, text));
+        return RasterUtils.ConvertToJpeg(captionImage(image, text));
     }
 
     /**

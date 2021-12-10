@@ -1,5 +1,7 @@
 package com.eziosoft.jgetreal.Raster;
 
+import com.eziosoft.jgetreal.utils.RasterUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
@@ -68,25 +70,6 @@ public class ImageFuzzer {
      * @throws IOException if imageio or something else explodes
      */
     public static byte[] FuzzToJpeg(byte[] image) throws IOException{
-        ImageIO.setUseCache(false);
-        BufferedImage tojpeg = ImageIO.read(new ByteArrayInputStream(image));
-        // create output buffered image
-        BufferedImage jpeg = new BufferedImage(tojpeg.getWidth(), tojpeg.getHeight(), BufferedImage.TYPE_INT_RGB);
-        // make graphics 2d
-        Graphics2D g = jpeg.createGraphics();
-        // draw image
-        g.drawImage(tojpeg, 0, 0, Color.white, null);
-        // dispose of graphics 2d
-        g.dispose();
-        // write to output stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(jpeg, "jpg", stream);
-        // convert to byte array
-        byte[] finish = stream.toByteArray();
-        // close stream
-        stream.flush();
-        stream.close();
-        // return
-        return finish;
+        return RasterUtils.ConvertToJpeg(FuzzImage(image));
     }
 }

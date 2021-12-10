@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal;
 
 import com.eziosoft.jgetreal.AnimatedGif.GifCaptioner;
 import com.eziosoft.jgetreal.Raster.Caption;
+import com.eziosoft.jgetreal.Raster.ImageColorSorter;
 import com.eziosoft.jgetreal.Raster.ImageFuzzer;
 
 import java.io.File;
@@ -24,6 +25,9 @@ public class test {
         } else if(args[0].equals("fuzz")){
             test = ImageFuzzer.FuzzImage(hec);
             out = new File("fuz.png");
+        } else if (args[0].equals("sort")){
+            test = ImageColorSorter.SortColorsOfImage(hec);
+            out = new File("sort.png");
         } else {
             System.err.println("Error: first argument must either be static or gif");
             System.exit(-1);
