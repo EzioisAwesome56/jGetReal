@@ -4,6 +4,7 @@ import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
+import com.icafe4j.image.writer.GIFWriter;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -15,6 +16,7 @@ import java.util.List;
 public class GifCaptioner {
 
     public static byte[] CaptionGif(byte[] in, String text) throws Exception {
+        // split the gif into frames
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(new ByteArrayInputStream(in));
         // get first frame
         GIFFrame frame1g = cont.getFrames().get(0);
@@ -28,6 +30,7 @@ public class GifCaptioner {
         // process the rest of the frames
         List<GIFFrame> list = new ArrayList<>();
         ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(temp.toByteArray(), text));
+        // we need to multiply the delay by 10 to account for gif being a bad format
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, frame1g.getDisposalMethod()));
         // put this here so i dont have to keep redefining it
         ByteArrayOutputStream helloneath;
