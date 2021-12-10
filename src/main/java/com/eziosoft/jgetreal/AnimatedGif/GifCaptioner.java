@@ -30,32 +30,30 @@ public class GifCaptioner {
         GIFFrame frame1g = cont.getFrames().get(0);
         cont.getFrames().remove(0);
         // convert frame 1 to byte array
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        ImageIO.write(frame1g.getFrame(), "png", temp);
-        // close stream
-        temp.close();
-        // process the rest of the frames
+        ByteArrayOutputStream helloneath = new ByteArrayOutputStream();
+        ImageIO.write(frame1g.getFrame(), "png", helloneath);
+        // add it to list
         List<GIFFrame> list = new ArrayList<>();
-        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(temp.toByteArray(), text));
+        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text));
         // we need to multiply the delay by 10 to account for gif being a bad format
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, frame1g.getDisposalMethod()));
-        // put this here so i dont have to keep redefining it
-        ByteArrayOutputStream helloneath;
         for (GIFFrame gf : cont.getFrames()){
+            // reset all streams
+            helloneath.reset();
             stream.close();
-            helloneath = new ByteArrayOutputStream();
+            // pad next frame
             ImageIO.write(gf.getFrame(), "png", helloneath);
             stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
-            helloneath.flush();
-            helloneath.close();
+            // add it to list
             list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, gf.getDisposalMethod()));
         }
         stream.close();
+        helloneath.close();
         // make stream to write byte array
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), out);
         byte[] dank = out.toByteArray();
-        out.flush();
+        out.reset();
         GIFTweaker.insertComments(new ByteArrayInputStream(dank), out, Collections.singletonList("This gif was produced using jGetReal!"));
         byte[] returnvar = out.toByteArray();
         out.close();
