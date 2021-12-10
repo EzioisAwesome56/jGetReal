@@ -19,6 +19,9 @@ public class test {
         } else if (args[0].equals("gif")){
             test = GifCaptioner.CaptionGif(hec, args[2]);
             out = new File("dank.gif");
+        } else if(args[0].equals("fuzz")){
+            test = ImageFuzzer.FuzzImage(hec);
+            out = new File("fuz.png");
         } else {
             System.err.println("Error: first argument must either be static or gif");
             System.exit(-1);

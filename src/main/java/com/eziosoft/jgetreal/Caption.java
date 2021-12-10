@@ -81,6 +81,7 @@ public class Caption {
      * @throws IOException if imageio runs into a problem
      */
     public static byte[] captionImage(byte[] image, String text) throws IOException {
+        ImageIO.setUseCache(false);
         // load image
         InputStream in = new ByteArrayInputStream(image);
         BufferedImage buf = ImageIO.read(in);

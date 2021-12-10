@@ -4,7 +4,6 @@ import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
-import com.icafe4j.image.writer.GIFWriter;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -16,13 +15,13 @@ import java.util.List;
 public class GifCaptioner {
 
     public static byte[] CaptionGif(byte[] in, String text) throws Exception {
+        ImageIO.setUseCache(false);
         // split the gif into frames
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(new ByteArrayInputStream(in));
         // get first frame
         GIFFrame frame1g = cont.getFrames().get(0);
         cont.getFrames().remove(0);
         // convert frame 1 to byte array
-        ImageIO.setUseCache(false);
         ByteArrayOutputStream temp = new ByteArrayOutputStream();
         ImageIO.write(frame1g.getFrame(), "png", temp);
         // close stream
