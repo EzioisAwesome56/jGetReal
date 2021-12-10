@@ -28,9 +28,11 @@ public class GifCaptioner {
         List<GIFFrame> list = new ArrayList<>();
         ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(temp.toByteArray(), text));
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay(), frame1g.getDisposalMethod()));
+        // put this here so i dont have to keep redefining it
+        ByteArrayOutputStream helloneath;
         for (GIFFrame gf : cont.getFrames()){
             stream.close();
-            ByteArrayOutputStream helloneath = new ByteArrayOutputStream();
+            helloneath = new ByteArrayOutputStream();
             ImageIO.write(gf.getFrame(), "png", helloneath);
             stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
             helloneath.flush();
