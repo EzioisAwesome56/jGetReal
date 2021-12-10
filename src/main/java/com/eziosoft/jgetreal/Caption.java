@@ -129,7 +129,23 @@ public class Caption {
                     start += 60;
                 }
             } else {
-                // todo: deal with really long things without spaces
+                List<StringBuilder> builders = new ArrayList<>();
+                builders.add(new StringBuilder());
+                int count = 0;
+                for (int x = 0; x < text.length(); x++){
+                    if (font.getStringBounds(builders.get(count).toString() + text.substring(x, x), frc).getWidth() > width){
+                        if (count + 1 < maxLines){
+                            builders.add(new StringBuilder());
+                            count++;
+                        }
+                    }
+                    builders.get(count).append(text, x, x + 1);
+                }
+                int start = 300 - (50 * builders.size());
+                for (StringBuilder b : builders){
+                    g.drawString(b.toString(), (width - (int) font.getStringBounds(b.toString(), frc).getWidth()) / 2, start);
+                    start += 50;
+                }
             }
         } else {
             g.drawString(text, (width - (int) font.getStringBounds(text, frc).getWidth()) / 2, 150);
