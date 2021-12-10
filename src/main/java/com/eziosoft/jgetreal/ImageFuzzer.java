@@ -38,6 +38,8 @@ public class ImageFuzzer {
         for (List<Integer> list : rows){
             Collections.shuffle(list);
         }
+        // also fuzz the rows themselves
+        Collections.shuffle(rows);
         // create new bufferedimage for output
         BufferedImage out = new BufferedImage(buf.getWidth(), buf.getHeight(), buf.getType());
         // output fuzzed data to buffered image
