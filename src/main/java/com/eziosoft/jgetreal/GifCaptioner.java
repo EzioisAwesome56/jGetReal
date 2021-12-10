@@ -14,6 +14,13 @@ import java.util.List;
 
 public class GifCaptioner {
 
+    /**
+     * Captions an animated gif
+     * @param in byte array of animated gif you wish to caption
+     * @param text text of caption
+     * @return byte array of captioned gif; obviously in gif format
+     * @throws Exception if something goes wrong somewhere
+     */
     public static byte[] CaptionGif(byte[] in, String text) throws Exception {
         ImageIO.setUseCache(false);
         // split the gif into frames

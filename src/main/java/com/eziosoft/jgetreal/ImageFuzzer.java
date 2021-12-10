@@ -59,6 +59,12 @@ public class ImageFuzzer {
         return result;
     }
 
+    /**
+     * fuzzed an image and returns it in jpeg format
+     * @param image byte array of image to fuzz
+     * @return byte array of fuzzed image; jpg format
+     * @throws IOException if imageio or something else explodes
+     */
     public static byte[] FuzzToJpeg(byte[] image) throws IOException{
         ImageIO.setUseCache(false);
         BufferedImage tojpeg = ImageIO.read(new ByteArrayInputStream(image));
