@@ -12,7 +12,13 @@ public class Caption {
 
     private static final int maxLines = 5;
 
-    public static byte[] padImage(byte[] in) throws Exception{
+    /**
+     * returns an image with 300px of transparent padding above the main content
+     * @param in byte array of image you wish to pad
+     * @return byte array of padded image, png format;
+     * @throws IOException usually if an io error occurs or if something else blows up
+     */
+    public static byte[] padImage(byte[] in) throws IOException {
         ImageIO.setUseCache(false);
         BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
         // make graphics 2d
@@ -30,6 +36,39 @@ public class Caption {
         return dank;
     }
 
+    /**
+     * converts an image to jpeg format
+     * @param in byte array of image to convert
+     * @return byte array of image to convert; jpeg format
+     * @throws IOException incase something blows up, imageio will probably throw io exception
+     */
+    public static byte[] convertToJpeg(byte[] in) throws IOException{
+        ImageIO.setUseCache(false);
+        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        // create canvas buffered image and also graphics2d instance
+        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = out.createGraphics();
+        // draw image
+        g.drawImage(source, 0, 0, new Color(0f, 0f, 0f), null);
+        // throw graphics2d away
+        g.dispose();
+        // write output image to stream
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(out, "jpg", stream);
+        // convert to byte array and close stream
+        byte[] fuck = stream.toByteArray();
+        stream.close();
+        // return
+        return fuck;
+    }
+
+    /**
+     * captions an image with provided text
+     * @param image byte array of image to caption
+     * @param text string of text to caption image with
+     * @return byte array of image with caption; png format
+     * @throws IOException if imageio runs into a problem
+     */
     public static byte[] captionImage(byte[] image, String text) throws IOException {
         // load image
         InputStream in = new ByteArrayInputStream(image);

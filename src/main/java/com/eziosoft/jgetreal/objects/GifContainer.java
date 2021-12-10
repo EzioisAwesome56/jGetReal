@@ -1,8 +1,6 @@
 package com.eziosoft.jgetreal.objects;
 
 import com.icafe4j.image.gif.GIFFrame;
-
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
