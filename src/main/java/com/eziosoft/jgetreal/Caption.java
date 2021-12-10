@@ -63,6 +63,17 @@ public class Caption {
     }
 
     /**
+     * captions an image, returns in jpeg format
+     * @param image byte array of image to caption
+     * @param text caption text
+     * @return byte array of captioned image; jpeg format
+     * @throws IOException if something blows up
+     */
+    public static byte[] captionAsJpeg(byte[] image, String text) throws IOException {
+        return convertToJpeg(captionImage(image, text));
+    }
+
+    /**
      * captions an image with provided text
      * @param image byte array of image to caption
      * @param text string of text to caption image with
