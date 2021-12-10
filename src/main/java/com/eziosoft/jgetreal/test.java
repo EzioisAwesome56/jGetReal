@@ -8,11 +8,21 @@ import java.nio.file.Paths;
 public class test {
 
     public static void main(String[] args) throws Exception {
-        File f = new File(args[0]);
+        File f = new File(args[1]);
         FileInputStream e = new FileInputStream(f);
         byte[] hec = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
-        byte[] test = GifCaptioner.CaptionGif(hec, args[1]);
-        File out = new File("dank.gif");
+        byte[] test = new byte[0];
+        File out = null;
+        if (args[0].equals("static")){
+            test = Caption.captionImage(hec, args[2]);
+            out = new File("dank.png");
+        } else if (args[0].equals("gif")){
+            test = GifCaptioner.CaptionGif(hec, args[2]);
+            out = new File("dank.gif");
+        } else {
+            System.err.println("Error: first argument must either be static or gif");
+            System.exit(-1);
+        }
         Files.write(Paths.get(out.getAbsolutePath()), test);
     }
 }
