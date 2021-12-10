@@ -1,5 +1,6 @@
-package com.eziosoft.jgetreal;
+package com.eziosoft.jgetreal.AnimatedGif;
 
+import com.eziosoft.jgetreal.Raster.Caption;
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;

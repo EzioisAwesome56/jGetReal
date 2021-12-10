@@ -1,7 +1,10 @@
 package com.eziosoft.jgetreal;
 
+import com.eziosoft.jgetreal.AnimatedGif.GifCaptioner;
+import com.eziosoft.jgetreal.Raster.Caption;
+import com.eziosoft.jgetreal.Raster.ImageFuzzer;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
