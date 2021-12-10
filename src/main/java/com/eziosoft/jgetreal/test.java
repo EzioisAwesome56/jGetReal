@@ -9,7 +9,6 @@ public class test {
 
     public static void main(String[] args) throws Exception {
         File f = new File(args[1]);
-        FileInputStream e = new FileInputStream(f);
         byte[] hec = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
         byte[] test = new byte[0];
         File out = null;
