@@ -12,6 +12,24 @@ public class Caption {
 
     private static final int maxLines = 5;
 
+    public static byte[] padImage(byte[] in) throws Exception{
+        ImageIO.setUseCache(false);
+        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        // make graphics 2d
+        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + 300, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D g = out.createGraphics();
+        // draw image
+        g.drawImage(source, 0, 300, new Color(1f,1f,1f,1f), null);
+        // throw graphics 2d in the trash
+        g.dispose();
+        // convert to byte array
+        ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+        ImageIO.write(out, "png", outstream);
+        byte[] dank = outstream.toByteArray();
+        outstream.close();
+        return dank;
+    }
+
     public static byte[] captionImage(byte[] image, String text) throws IOException {
         // load image
         InputStream in = new ByteArrayInputStream(image);

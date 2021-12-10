@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GifContainer {
-    private List<BufferedImage> frames = new ArrayList<>();
-    private int loopcount;
-    private List<Integer> delays = new ArrayList<>();
+    private List<GIFFrame> frames = new ArrayList<>();
 
-    public void addFrame(BufferedImage in){
+    public void addFrame(GIFFrame in){
         this.frames.add(in);
     }
 
-    public void addDelay(int in){
-        this.delays.add(in);
+
+    public List<GIFFrame> getFrames() {
+        return frames;
     }
 }
