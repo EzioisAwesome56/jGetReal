@@ -133,13 +133,13 @@ public class Caption {
                 builders.add(new StringBuilder());
                 int count = 0;
                 for (int x = 0; x < text.length(); x++){
-                    if (font.getStringBounds(builders.get(count).toString() + text.substring(x, x), frc).getWidth() > width){
+                    if (font.getStringBounds(builders.get(count).toString() + text.charAt(x), frc).getWidth() > width){
                         if (count + 1 < maxLines){
                             builders.add(new StringBuilder());
                             count++;
                         }
                     }
-                    builders.get(count).append(text, x, x + 1);
+                    builders.get(count).append(text.charAt(x));
                 }
                 int start = 300 - (50 * builders.size());
                 for (StringBuilder b : builders){
