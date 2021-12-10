@@ -24,10 +24,10 @@ public class Caption {
         ImageIO.setUseCache(false);
         BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
         // make graphics 2d
-        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + 300 + 1, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + 300, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = out.createGraphics();
         // draw image
-        g.drawImage(source, 0, 301, new Color(1f,1f,1f,1f), null);
+        g.drawImage(source, 0, 300, new Color(1f,1f,1f,1f), null);
         // throw graphics 2d in the trash
         g.dispose();
         // convert to byte array
@@ -67,10 +67,10 @@ public class Caption {
         int height = buf.getHeight();
         int fontsize = 64;
         // make new buffered image thats slightly taller
-        BufferedImage out = new BufferedImage(width, height + 300 + 1, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage out = new BufferedImage(width, height + 300, BufferedImage.TYPE_4BYTE_ABGR);
         // draw our image to it, offset by 300 pixels
         Graphics2D g = out.createGraphics();
-        g.drawImage(buf, 0, 301, new Color(1f,1f,1f,1f), null);
+        g.drawImage(buf, 0, 300, new Color(1f,1f,1f,1f), null);
         // set color to white
         g.setColor(Color.WHITE);
         // set stroke type
