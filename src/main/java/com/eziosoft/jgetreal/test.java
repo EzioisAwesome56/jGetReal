@@ -5,6 +5,7 @@ import com.eziosoft.jgetreal.AnimatedGif.GifFuzzer;
 import com.eziosoft.jgetreal.Raster.Caption;
 import com.eziosoft.jgetreal.Raster.ImageColorSorter;
 import com.eziosoft.jgetreal.Raster.ImageFuzzer;
+import com.eziosoft.jgetreal.Raster.Spin;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -31,6 +32,9 @@ public class test {
             out = new File("sort.png");
         } else if (args[0].equals("giffuzz")){
             test = GifFuzzer.FuzzGif(hec);
+            out = new File("dank.gif");
+        } else if (args[0].equals("spin")){
+            test = Spin.spinRaster(hec);
             out = new File("dank.gif");
         } else {
             System.err.println("Error: first argument must either be static or gif");
