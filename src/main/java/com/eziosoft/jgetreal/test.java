@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal;
 
 import com.eziosoft.jgetreal.AnimatedGif.GifCaptioner;
 import com.eziosoft.jgetreal.AnimatedGif.GifFuzzer;
+import com.eziosoft.jgetreal.AnimatedGif.GifSpin;
 import com.eziosoft.jgetreal.Raster.Caption;
 import com.eziosoft.jgetreal.Raster.ImageColorSorter;
 import com.eziosoft.jgetreal.Raster.ImageFuzzer;
@@ -36,6 +37,8 @@ public class test {
         } else if (args[0].equals("spin")){
             test = Spin.spinRaster(hec);
             out = new File("dank.gif");
+        } else if (args[0].equals("gifspin")){
+            test = GifSpin.spinGif(hec);
         } else {
             System.err.println("Error: first argument must either be static or gif");
             System.exit(-1);
