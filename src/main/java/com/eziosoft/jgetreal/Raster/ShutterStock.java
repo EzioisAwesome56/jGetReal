@@ -9,6 +9,12 @@ import java.io.IOException;
 
 public class ShutterStock {
 
+    /**
+     * Applies shutterstock watermark to image
+     * @param in bytearray of image to
+     * @return byte array of watermarked image; png format
+     * @throws IOException if something blows uo
+     */
     public static byte[] Stockify(byte[] in) throws IOException {
         // set imageIO cache to false
         ImageIO.setUseCache(false);
