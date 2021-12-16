@@ -23,6 +23,10 @@ public class GifUtils {
         return cont;
     }
 
+    public static GifContainer splitAnimatedGifToContainer(byte[] in) throws Exception{
+        return splitAnimatedGifToContainer(new ByteArrayInputStream(in));
+    }
+
     /**
      * crapifies a gif
      * @param in gif to crapify
