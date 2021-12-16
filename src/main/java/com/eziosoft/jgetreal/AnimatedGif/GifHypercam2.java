@@ -36,7 +36,7 @@ public class GifHypercam2 {
             // use imageio to write current frame to it
             ImageIO.write(f.getFrame(), "png", temp);
             // create new GIF Frame from this data
-            imgs.add(new GIFFrame(ImageIO.read(new ByteArrayInputStream(Hypercam2.Unregister(temp.toByteArray()))), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
+            imgs.add(new GIFFrame(ImageIO.read(new ByteArrayInputStream(Hypercam2.Unregister(temp.toByteArray()))), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
         }
         // reset the stream
         temp.reset();
