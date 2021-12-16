@@ -20,5 +20,9 @@ public class GifShutterStock {
         List<GIFFrame> imgs = new ArrayList<>();
         // setup the output stream
         ByteArrayOutputStream temp = new ByteArrayOutputStream();
+        // produce the frames
+        for (GIFFrame f : cont.getFrames()){
+            // reset
+        }
     }
 }
