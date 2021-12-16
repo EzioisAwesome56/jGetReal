@@ -5,6 +5,7 @@ import com.eziosoft.jgetreal.AnimatedGif.GifFuzzer;
 import com.eziosoft.jgetreal.AnimatedGif.GifHypercam2;
 import com.eziosoft.jgetreal.AnimatedGif.GifSpin;
 import com.eziosoft.jgetreal.Raster.*;
+import com.eziosoft.jgetreal.utils.GifUtils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -44,7 +45,10 @@ public class test {
         } else if (args[0].equals("gifhypercam")){
             test = GifHypercam2.UnregisterGif(hec);
             out = new File("dank.gif");
-        } else {
+        } else if (args[0].equals("gifcrap")){
+            test = GifUtils.CrapifyGif(hec);
+            out = new File("dank.gif");
+        }else {
             System.err.println("Error: first argument must either be static or gif");
             System.exit(-1);
         }
