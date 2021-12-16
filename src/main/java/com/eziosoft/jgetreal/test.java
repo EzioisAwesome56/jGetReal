@@ -39,6 +39,7 @@ public class test {
             out = new File("dank.gif");
         } else if (args[0].equals("gifspin")){
             test = GifSpin.spinGif(hec);
+            out = new File("dank.gif");
         } else {
             System.err.println("Error: first argument must either be static or gif");
             System.exit(-1);

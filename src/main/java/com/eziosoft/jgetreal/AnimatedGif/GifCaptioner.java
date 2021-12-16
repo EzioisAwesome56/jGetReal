@@ -36,7 +36,7 @@ public class GifCaptioner {
         List<GIFFrame> list = new ArrayList<>();
         ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text));
         // we need to multiply the delay by 10 to account for gif being a bad format
-        list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, frame1g.getDisposalMethod()));
+        list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         for (GIFFrame gf : cont.getFrames()){
             // reset all streams
             helloneath.reset();
@@ -45,7 +45,7 @@ public class GifCaptioner {
             ImageIO.write(gf.getFrame(), "png", helloneath);
             stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
             // add it to list
-            list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, gf.getDisposalMethod()));
+            list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         stream.close();
         // reset stream so you can write to it
