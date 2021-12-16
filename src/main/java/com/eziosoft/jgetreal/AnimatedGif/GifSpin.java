@@ -15,6 +15,12 @@ import java.util.List;
 
 public class GifSpin {
 
+    /**
+     * spins a gif 360 degrees
+     * @param in byte array of animated gif
+     * @return byte array of processed gif
+     * @throws Exception if something blows up
+     */
     public static byte[] spinGif(byte[] in) throws Exception {
         // set imageio cache to off
         ImageIO.setUseCache(false);
