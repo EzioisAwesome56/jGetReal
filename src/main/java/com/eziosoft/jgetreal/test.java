@@ -2,11 +2,9 @@ package com.eziosoft.jgetreal;
 
 import com.eziosoft.jgetreal.AnimatedGif.GifCaptioner;
 import com.eziosoft.jgetreal.AnimatedGif.GifFuzzer;
+import com.eziosoft.jgetreal.AnimatedGif.GifHypercam2;
 import com.eziosoft.jgetreal.AnimatedGif.GifSpin;
-import com.eziosoft.jgetreal.Raster.Caption;
-import com.eziosoft.jgetreal.Raster.ImageColorSorter;
-import com.eziosoft.jgetreal.Raster.ImageFuzzer;
-import com.eziosoft.jgetreal.Raster.Spin;
+import com.eziosoft.jgetreal.Raster.*;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -39,6 +37,12 @@ public class test {
             out = new File("dank.gif");
         } else if (args[0].equals("gifspin")){
             test = GifSpin.spinGif(hec);
+            out = new File("dank.gif");
+        } else if (args[0].equals("hypercam")){
+            test = Hypercam2.Unregister(hec);
+            out = new File("dank.png");
+        } else if (args[0].equals("gifhypercam")){
+            test = GifHypercam2.UnregisterGif(hec);
             out = new File("dank.gif");
         } else {
             System.err.println("Error: first argument must either be static or gif");
