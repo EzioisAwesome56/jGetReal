@@ -59,6 +59,10 @@ public class test {
                 test = GifUtils.CrapifyGif(hec);
                 out = new File("dank.gif");
                 break;
+            case "stock":
+                test = ShutterStock.Stockify(hec);
+                out = new File("dank.png");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
