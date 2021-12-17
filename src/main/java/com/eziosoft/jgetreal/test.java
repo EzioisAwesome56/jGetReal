@@ -80,6 +80,14 @@ public class test {
                 test = GIfInverter.InvertGif(hec);
                 out = new File("dank.gif");
                 break;
+            case "ifunny":
+                test = IFunny.Watermark(hec);
+                out = new File("dank.png");
+                break;
+            case "gififunny":
+                test = GifIFunny.WatermarkGif(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
