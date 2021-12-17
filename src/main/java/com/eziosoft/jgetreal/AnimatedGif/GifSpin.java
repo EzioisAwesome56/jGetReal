@@ -1,5 +1,6 @@
 package com.eziosoft.jgetreal.AnimatedGif;
 
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,15 @@ public class GifSpin {
      * spins a gif 360 degrees
      * @param in byte array of animated gif
      * @return byte array of processed gif
-     * @throws Exception if something blows up
+     * @throws IOException if something blows up
      */
-    public static byte[] spinGif(byte[] in) throws Exception {
+    public static byte[] spinGif(byte[] in) throws IOException {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // first, we need to get every frame of the gif. Do that
-        GifContainer cont = GifUtils.splitAnimatedGifToContainer(new ByteArrayInputStream(in));
+        ByteArrayInputStream streamin = new ByteArrayInputStream(in);
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(streamin);
+        streamin.close();
         // determine step for each spin frame
         double step = Math.ceil(360D / cont.getFrames().size());
         // make list to store process frames
@@ -54,7 +58,11 @@ public class GifSpin {
         // create output stream to store gif in
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         // write gif to stream
-        GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
+        try {
+            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
+        } catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
         // convert tp byte array
         byte[] done = out.toByteArray();
         // close stream
