@@ -72,6 +72,14 @@ public class test {
                 test = GifFunky.FunkGif(hec);
                 out = new File("dank.gif");
                 break;
+            case "invert":
+                test = Invert.InvertColors(hec);
+                out = new File("dank.png");
+                break;
+            case "gifinvert":
+                test = GIfInverter.InvertGif(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
