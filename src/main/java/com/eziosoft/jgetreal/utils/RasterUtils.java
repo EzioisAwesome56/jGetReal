@@ -6,6 +6,8 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -82,5 +84,19 @@ public class RasterUtils {
         out.close();
         imgout.close();
         return done;
+    }
+
+    /**
+     * Mirros an image
+     * @param in bufferedimage to mirror
+     * @return mirrored buffered image
+     */
+    public static BufferedImage MirrorImage(BufferedImage in){
+        // setup transform settings
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-in.getWidth(), 0);
+        // setup operation
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(in, null);
     }
 }

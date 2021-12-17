@@ -64,6 +64,14 @@ public class test {
                 test = GifShutterStock.StockifyGif(hec);
                 out = new File("dank.gif");
                 break;
+            case "funky":
+                test = Funky.Funk(hec);
+                out = new File("dank.png");
+                break;
+            case "giffunky":
+                test = GifFunky.FunkGif(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
