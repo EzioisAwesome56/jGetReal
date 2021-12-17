@@ -1,6 +1,6 @@
 package com.eziosoft.jgetreal.Raster;
 
-import com.eziosoft.jgetreal.utils.RasterUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.eziosoft.jgetreal.utils;
+package com.eziosoft.jgetreal.Utils;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class RasterUtils {
 

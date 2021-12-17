@@ -1,4 +1,4 @@
-package com.eziosoft.jgetreal.utils;
+package com.eziosoft.jgetreal.Utils;
 
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.icafe4j.image.gif.FrameReader;

@@ -2,7 +2,7 @@ package com.eziosoft.jgetreal;
 
 import com.eziosoft.jgetreal.AnimatedGif.*;
 import com.eziosoft.jgetreal.Raster.*;
-import com.eziosoft.jgetreal.utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.GifUtils;
 
 import java.io.File;
 import java.nio.file.Files;

@@ -2,8 +2,8 @@ package com.eziosoft.jgetreal.AnimatedGif;
 
 import com.eziosoft.jgetreal.Raster.ShutterStock;
 import com.eziosoft.jgetreal.objects.GifContainer;
-import com.eziosoft.jgetreal.utils.GifUtils;
-import com.eziosoft.jgetreal.utils.RasterUtils;
+import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
