@@ -1,6 +1,5 @@
 package com.eziosoft.jgetreal.AnimatedGif;
 
-import com.eziosoft.jgetreal.Raster.Funky;
 import com.eziosoft.jgetreal.Raster.Invert;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.objects.GifContainer;
@@ -10,6 +9,7 @@ import com.icafe4j.image.gif.GIFTweaker;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +20,9 @@ public class GIfInverter {
      * inverts every frame of an animated gif
      * @param in byte array of animated gif to invert
      * @return inverted gif
-     * @throws Exception throws if something blows up in the process
+     * @throws IOException throws if something blows up in the process
      */
-    public static byte[] InvertGif(byte[] in) throws Exception {
+    public static byte[] InvertGif(byte[] in) throws IOException {
         // set imageio cache to false
         ImageIO.setUseCache(false);
         // get gif frames as container

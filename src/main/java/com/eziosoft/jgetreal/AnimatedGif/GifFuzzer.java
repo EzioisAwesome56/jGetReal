@@ -1,6 +1,7 @@
 package com.eziosoft.jgetreal.AnimatedGif;
 
 import com.eziosoft.jgetreal.Raster.ImageFuzzer;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;
@@ -9,6 +10,7 @@ import com.icafe4j.image.gif.GIFTweaker;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +20,14 @@ public class GifFuzzer {
      * fuzzes every frame of an animated gif
      * @param in byte array of gif you wish to fuz
      * @return byte array of fuzzed gif
-     * @throws Exception if something blows up in the process
+     * @throws IOException if something blows up in the process
      */
-    public static byte[] FuzzGif(byte[] in) throws Exception{
+    public static byte[] FuzzGif(byte[] in) throws IOException {
         ImageIO.setUseCache(false);
         // first we need to get all the frames of the gif
-        GifContainer cont = GifUtils.splitAnimatedGifToContainer(new ByteArrayInputStream(in));
+        ByteArrayInputStream streamin = new ByteArrayInputStream(in);
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(streamin);
+        streamin.close();
         // make new list of gifFrames
         List<GIFFrame> processed = new ArrayList<>();
         // process each frame
@@ -34,12 +38,18 @@ public class GifFuzzer {
             // write to output stream
             ImageIO.write(f.getFrame(), "png", temp);
             // put new frame into the list
-            processed.add(new GIFFrame(ImageIO.read(new ByteArrayInputStream(ImageFuzzer.FuzzImage(temp.toByteArray()))), f.getDelay() * 10, f.getDisposalMethod()));
+            streamin = new ByteArrayInputStream(ImageFuzzer.FuzzImage(temp.toByteArray()));
+            processed.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
+            streamin.close();
         }
         // flush old data out of temp
         temp.reset();
         // create the animated gif
-        GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), temp);
+        try {
+            GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), temp);
+        } catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
         // convert to byte array
         byte[] finish = temp.toByteArray();
         // close stream

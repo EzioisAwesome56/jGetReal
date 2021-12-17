@@ -1,6 +1,7 @@
 package com.eziosoft.jgetreal.AnimatedGif;
 
 import com.eziosoft.jgetreal.Raster.Caption;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.icafe4j.image.gif.GIFFrame;
@@ -10,8 +11,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GifCaptioner {
@@ -21,12 +22,12 @@ public class GifCaptioner {
      * @param in byte array of animated gif you wish to caption
      * @param text text of caption
      * @return byte array of captioned gif; obviously in gif format
-     * @throws Exception if something goes wrong somewhere
+     * @throws IOException if something goes wrong somewhere
      */
-    public static byte[] CaptionGif(byte[] in, String text) throws Exception {
+    public static byte[] CaptionGif(byte[] in, String text) throws IOException {
         ImageIO.setUseCache(false);
         // split the gif into frames
-        GifContainer cont = GifUtils.splitAnimatedGifToContainer(new ByteArrayInputStream(in));
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // get first frame
         GIFFrame frame1g = cont.getFrames().get(0);
         cont.getFrames().remove(0);
@@ -38,7 +39,7 @@ public class GifCaptioner {
         ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text, Color.GRAY));
         // we need to multiply the delay by 10 to account for gif being a bad format
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
-        for (GIFFrame gf : cont.getFrames()){
+        for (GIFFrame gf : cont.getFrames()) {
             // reset all streams
             helloneath.reset();
             stream.close();
@@ -51,10 +52,11 @@ public class GifCaptioner {
         stream.close();
         // reset stream so you can write to it
         helloneath.reset();
-        GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), helloneath);
-        byte[] dank = helloneath.toByteArray();
-        helloneath.reset();
-        GIFTweaker.insertComments(new ByteArrayInputStream(dank), helloneath, Collections.singletonList("This gif was produced using jGetReal!"));
+        try {
+            GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), helloneath);
+        } catch (Exception e) {
+            throw ErrorUtils.HandleiCafeError(e);
+        }
         byte[] returnvar = helloneath.toByteArray();
         helloneath.close();
         return returnvar;
