@@ -37,7 +37,7 @@ public class GifSpin {
             // load the current frame into a buffered image
             BufferedImage source = cont.getFrames().get(count).getFrame();
             // create new buffered image
-            BufferedImage temp = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
+            BufferedImage temp = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
             // get graphics 2d for this image
             Graphics2D g = temp.createGraphics();
             // rotate graphics
