@@ -29,7 +29,7 @@ public class RasterUtils {
         // make graphics 2d
         Graphics2D g = jpeg.createGraphics();
         // draw image
-        g.drawImage(tojpeg, 0, 0, Color.white, null);
+        g.drawImage(tojpeg, 0, 0, null);
         // dispose of graphics 2d
         g.dispose();
         // write to output stream
