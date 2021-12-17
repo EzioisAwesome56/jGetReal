@@ -1,6 +1,7 @@
 package com.eziosoft.jgetreal.AnimatedGif;
 
 import com.eziosoft.jgetreal.Raster.Invert;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.objects.GifContainer;
 import com.icafe4j.image.gif.GIFFrame;
@@ -38,12 +39,18 @@ public class GIfInverter {
             // write frame to stream
             ImageIO.write(f.getFrame(), "png", temp);
             // add frame once processed
-            imgs.add(new GIFFrame(ImageIO.read(new ByteArrayInputStream(Invert.InvertColors(temp.toByteArray()))), f.getDelay() * 10, f.getDisposalMethod()));
+            ByteArrayInputStream streamin = new ByteArrayInputStream(Invert.InvertColors(temp.toByteArray()));
+            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
+            streamin.close();
         }
         // reset stream
         temp.reset();
         // output gif to the stream
-        GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
+        try {
+            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
+        } catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
         // convert to array, close, return
         byte[] done = temp.toByteArray();
         temp.close();
