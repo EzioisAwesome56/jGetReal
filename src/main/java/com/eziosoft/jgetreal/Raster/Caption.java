@@ -27,7 +27,7 @@ public class Caption {
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + 300, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = out.createGraphics();
         // draw image
-        g.drawImage(source, 0, 300, new Color(1f,1f,1f,1f), null);
+        g.drawImage(source, 0, 300, null);
         // throw graphics 2d in the trash
         g.dispose();
         // convert to byte array
@@ -56,7 +56,7 @@ public class Caption {
      * @return byte array of image with caption; png format
      * @throws IOException if imageio runs into a problem
      */
-    public static byte[] captionImage(byte[] image, String text) throws IOException {
+    public static byte[] captionImage(byte[] image, String text, Color... col) throws IOException {
         ImageIO.setUseCache(false);
         // load image
         InputStream in = new ByteArrayInputStream(image);
@@ -67,12 +67,16 @@ public class Caption {
         int height = buf.getHeight();
         int fontsize = 64;
         // make new buffered image thats slightly taller
-        BufferedImage out = new BufferedImage(width, height + 300, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage out = new BufferedImage(width, height + 300, BufferedImage.TYPE_INT_RGB);
         // draw our image to it, offset by 300 pixels
         Graphics2D g = out.createGraphics();
-        g.drawImage(buf, 0, 300, new Color(1f,1f,1f,1f), null);
-        // set color to white
-        g.setColor(Color.WHITE);
+        g.drawImage(buf, 0, 300, null);
+        // set color to white if no colors are set
+        if (col.length == 0){
+            g.setColor(Color.white);
+        } else {
+            g.setColor(col[0]);
+        }
         // set stroke type
         g.fillRect(0, 0, width, 300);
         // set the font and font color

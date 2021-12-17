@@ -7,6 +7,7 @@ import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class GifCaptioner {
         ImageIO.write(frame1g.getFrame(), "png", helloneath);
         // add it to list
         List<GIFFrame> list = new ArrayList<>();
-        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text));
+        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text, Color.GRAY));
         // we need to multiply the delay by 10 to account for gif being a bad format
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         for (GIFFrame gf : cont.getFrames()){

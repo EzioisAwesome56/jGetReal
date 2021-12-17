@@ -1,9 +1,6 @@
 package com.eziosoft.jgetreal;
 
-import com.eziosoft.jgetreal.AnimatedGif.GifCaptioner;
-import com.eziosoft.jgetreal.AnimatedGif.GifFuzzer;
-import com.eziosoft.jgetreal.AnimatedGif.GifHypercam2;
-import com.eziosoft.jgetreal.AnimatedGif.GifSpin;
+import com.eziosoft.jgetreal.AnimatedGif.*;
 import com.eziosoft.jgetreal.Raster.*;
 import com.eziosoft.jgetreal.utils.GifUtils;
 
@@ -62,6 +59,10 @@ public class test {
             case "stock":
                 test = ShutterStock.Stockify(hec);
                 out = new File("dank.png");
+                break;
+            case "gifstock":
+                test = GifShutterStock.StockifyGif(hec);
+                out = new File("dank.gif");
                 break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
