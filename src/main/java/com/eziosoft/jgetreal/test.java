@@ -5,12 +5,13 @@ import com.eziosoft.jgetreal.Raster.*;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class test {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         File f = new File(args[1]);
         byte[] hec = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
         byte[] test = new byte[0];
@@ -87,6 +88,10 @@ public class test {
             case "gififunny":
                 test = GifIFunny.WatermarkGif(hec);
                 out = new File("dank.gif");
+                break;
+            case "bandicam":
+                test = Bandicam.Watermark(hec);
+                out = new File("dank.png");
                 break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
