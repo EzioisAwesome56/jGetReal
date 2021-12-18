@@ -17,6 +17,12 @@ import java.util.List;
 
 public class GifBandicam {
 
+    /**
+     * Applies bandicam.com watermark to an animated gif
+     * @param in gif to watermark
+     * @return watermarked gif
+     * @throws IOException if something blows up in the process
+     */
     public static byte[] Watermark(byte[] in) throws IOException {
         // set imageio cache to false
         ImageIO.setUseCache(false);
