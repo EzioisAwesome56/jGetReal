@@ -4,6 +4,7 @@ import com.eziosoft.jgetreal.Utils.RasterUtils;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,9 @@ public class ImageFuzzer {
     public static byte[] FuzzImage(byte[] image) throws IOException {
         ImageIO.setUseCache(false);
         // first convert array to buffered image
-        BufferedImage buf = ImageIO.read(new ByteArrayInputStream(image));
+        InputStream streamin = new ByteArrayInputStream(image);
+        BufferedImage buf = ImageIO.read(streamin);
+        streamin.close();
         // make list to hold all rows
         List<List<Integer>> rows = new ArrayList<>();
         // fill list with empty lists

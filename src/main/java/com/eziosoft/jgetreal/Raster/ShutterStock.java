@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ShutterStock {
 
@@ -19,9 +20,13 @@ public class ShutterStock {
         // set imageIO cache to false
         ImageIO.setUseCache(false);
         // load shutterstock
-        BufferedImage stock = ImageIO.read(ShutterStock.class.getResourceAsStream("/shutterstock.png"));
+        InputStream streamin = ShutterStock.class.getResourceAsStream("/shutterstock.png");
+        BufferedImage stock = ImageIO.read(streamin);
+        streamin.close();
         // load source image
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // create graphics 2d instance
         Graphics2D g = source.createGraphics();
         // draw shutterstock to it

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,9 @@ public class ImageColorSorter {
         // disable imageio cache because thats cringe
         ImageIO.setUseCache(false);
         // get buffered image
-        BufferedImage buf = ImageIO.read(new ByteArrayInputStream(image));
+        InputStream streamin = new ByteArrayInputStream(image);
+        BufferedImage buf = ImageIO.read(streamin);
+        streamin.close();
         // get each pixel, store it in a list
         List<Integer> pixels = new ArrayList<>();
         for (int y = 0; y < buf.getHeight(); y++){

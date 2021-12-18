@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Hypercam2 {
 
@@ -21,9 +22,13 @@ public class Hypercam2 {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // load source image from byte array
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // load hypercam2 watermark from resources
-        BufferedImage hypercam = ImageIO.read(Hypercam2.class.getResourceAsStream("/hypercam.png"));
+        streamin = Hypercam2.class.getResourceAsStream("/hypercam.png");
+        BufferedImage hypercam = ImageIO.read(streamin);
+        streamin.close();
         // create graphics 2d context of the source image
         Graphics2D g = source.createGraphics();
         // draw hypercam onto the source image at 0,0

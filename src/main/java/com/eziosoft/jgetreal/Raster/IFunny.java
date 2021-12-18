@@ -24,13 +24,13 @@ public class IFunny {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // read both source image and watermark
-        ByteArrayInputStream dankfuck = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(dankfuck);
-        dankfuck.close();
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // load the ifunny watermark and scale it by source's width
-        InputStream instream = IFunny.class.getResourceAsStream("/ifunny.png");
-        BufferedImage ifunny = Scalr.resize(ImageIO.read(instream), source.getWidth());
-        instream.close();
+        streamin = IFunny.class.getResourceAsStream("/ifunny.png");
+        BufferedImage ifunny = Scalr.resize(ImageIO.read(streamin), source.getWidth());
+        streamin.close();
         // create new output buffered image
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + ifunny.getHeight(), source.getType());
         // create graphics 2d for buffered image

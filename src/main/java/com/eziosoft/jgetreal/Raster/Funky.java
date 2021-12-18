@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Funky {
 
@@ -21,9 +22,13 @@ public class Funky {
         // set imageio cache to false
         ImageIO.setUseCache(false);
         // load source buffered image
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // load the watermark
-        BufferedImage kong = ImageIO.read(Funky.class.getResourceAsStream("/funky.png"));
+        streamin = Funky.class.getResourceAsStream("/funky.png");
+        BufferedImage kong = ImageIO.read(streamin);
+        streamin.close();
         // mirror source image
         source = RasterUtils.MirrorImage(source);
         // create graphics 2d context

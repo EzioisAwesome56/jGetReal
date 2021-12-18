@@ -22,7 +22,9 @@ public class Caption {
      */
     public static byte[] padImage(byte[] in) throws IOException {
         ImageIO.setUseCache(false);
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        ByteArrayInputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // make graphics 2d
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + 300, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = out.createGraphics();
@@ -149,6 +151,8 @@ public class Caption {
         hell.flush();
         ImageIO.setUseCache(false);
         ImageIO.write(out, "png", hell);
-        return hell.toByteArray();
+        byte[] done = hell.toByteArray();
+        hell.close();
+        return done;
     }
 }

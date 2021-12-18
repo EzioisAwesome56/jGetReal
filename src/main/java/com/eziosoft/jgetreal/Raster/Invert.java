@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Invert {
 
@@ -19,7 +20,9 @@ public class Invert {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // load source image
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // create new image with same size as source image
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
         // loop thru every pixel of source

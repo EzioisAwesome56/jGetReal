@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,9 @@ public class Spin {
         // create list of buffered images to be filled later
         List<GIFFrame> imgs = new ArrayList<>();
         // read source image from provided byte array
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // get dimensions of source
         int h = source.getHeight();
         int w = source.getWidth();

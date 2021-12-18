@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class RasterUtils {
 
@@ -23,7 +24,9 @@ public class RasterUtils {
      */
     public static byte[] ConvertToJpeg(byte[] in) throws IOException {
         ImageIO.setUseCache(false);
-        BufferedImage tojpeg = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage tojpeg = ImageIO.read(streamin);
+        streamin.close();
         // create output buffered image
         BufferedImage jpeg = new BufferedImage(tojpeg.getWidth(), tojpeg.getHeight(), BufferedImage.TYPE_INT_RGB);
         // make graphics 2d
@@ -64,7 +67,9 @@ public class RasterUtils {
         ImageOutputStream imgout = ImageIO.createImageOutputStream(out);
         jpeg.setOutput(imgout);
         // next, use imageIO to produce the "jpeg", first by reading the input image
-        BufferedImage source = ImageIO.read(new ByteArrayInputStream(in));
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage source = ImageIO.read(streamin);
+        streamin.close();
         // create new bufferedimage that is in jpeg format
         BufferedImage jpegout = new BufferedImage(source.getWidth(), source.getHeight(),  BufferedImage.TYPE_INT_RGB);
         // create graphics2d, draw source to it, then dipose of it
