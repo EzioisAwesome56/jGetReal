@@ -1,5 +1,6 @@
 package com.eziosoft.jgetreal.Raster;
 
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +20,9 @@ public class Spin {
      * creates an animated gif of the provided raster image spinning 360 degrees
      * @param in byte array of raster image to spin
      * @return byte array of animated gif
-     * @throws Exception if something blows up during generation
+     * @throws IOException if something blows up during generation
      */
-    public static byte[] spinRaster(byte[] in) throws Exception {
+    public static byte[] spinRaster(byte[] in) throws IOException {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // create list of buffered images to be filled later
@@ -50,7 +52,11 @@ public class Spin {
         // create new byteoutputstream
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         // write gif to stream
-        GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
+        try {
+            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
+        } catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
         // convert tp byte array
         byte[] done = out.toByteArray();
         // close stream
