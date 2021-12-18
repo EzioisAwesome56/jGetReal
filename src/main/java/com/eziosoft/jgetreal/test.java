@@ -93,6 +93,14 @@ public class test {
                 test = Bandicam.Watermark(hec);
                 out = new File("dank.png");
                 break;
+            case "whodid":
+                test = WhoDid.This(hec);
+                out = new File("dank.png");
+                break;
+            case "gifwhodid":
+                test = GifWhoDid.GifThis(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
