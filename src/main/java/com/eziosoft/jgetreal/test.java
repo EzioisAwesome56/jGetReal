@@ -101,6 +101,10 @@ public class test {
                 test = GifWhoDid.GifThis(hec);
                 out = new File("dank.gif");
                 break;
+            case "gifbandicam":
+                test = GifBandicam.Watermark(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
