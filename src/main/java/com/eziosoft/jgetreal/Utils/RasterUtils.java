@@ -103,4 +103,18 @@ public class RasterUtils {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         return op.filter(in, null);
     }
+
+    /**
+     * flips image verically
+     * @param in image to flip
+     * @return flipped image
+     */
+    public static BufferedImage VerticalFlip(BufferedImage in){
+        // setup transform settings
+        AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+        tx.translate(0, -in.getHeight());
+        // setup operation
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(in, null);
+    }
 }

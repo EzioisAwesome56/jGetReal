@@ -105,6 +105,14 @@ public class test {
                 test = GifBandicam.Watermark(hec);
                 out = new File("dank.gif");
                 break;
+            case "2hu":
+                test = TouhouLook.Look(hec);
+                out = new File("dank.png");
+                break;
+            case "gif2hu":
+                test = GifTouhouLook.TouhoulookGif(hec);
+                out = new File("dank.gif");
+                break;
             default:
                 System.err.println("Error: first argument must either be static or gif");
                 System.exit(-1);
