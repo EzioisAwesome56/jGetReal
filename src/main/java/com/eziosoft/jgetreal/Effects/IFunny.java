@@ -1,5 +1,12 @@
-package com.eziosoft.jgetreal.Raster;
+package com.eziosoft.jgetreal.Effects;
 
+import com.eziosoft.jgetreal.Objects.EffectResult;
+import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
+import com.eziosoft.jgetreal.Utils.FormatUtils;
+import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.icafe4j.image.gif.GIFFrame;
+import com.icafe4j.image.gif.GIFTweaker;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -11,8 +18,22 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 public class IFunny {
+
+    /**
+     * applies the ifunny watermark to provided image
+     * @param in image to watermark
+     * @return watermarked image
+     * @throws IOException if something blows up anywhere during this mess
+     */
+    public static EffectResult Watermark(byte[] in) throws IOException{
+        // first get the image format type
+        String type = FormatUtils.getFormatName(in).toLowerCase(Locale.ROOT);
+        // then do shit based on format
+        return new EffectResult(type.contains("gif") ? Gif(in) : Raster(in), type.contains("gif") ? "gif" : "png");
+    }
 
     /**
      * applies the ifunny watermark to an image
@@ -20,7 +41,7 @@ public class IFunny {
      * @return watermarked image; jpeg format
      * @throws IOException if something blows up
      */
-    public static byte[] Watermark(byte[] in) throws IOException {
+    private static byte[] Raster(byte[] in) throws IOException {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // read both source image and watermark
@@ -55,7 +76,7 @@ public class IFunny {
      * @return list of padded images
      * @throws IOException if something blows up
      */
-    public static List<BufferedImage> PadImages(List<BufferedImage> in) throws IOException{
+    private static List<BufferedImage> PadImages(List<BufferedImage> in) throws IOException{
         // turn imageio cache off
         ImageIO.setUseCache(false);
         // load the watermark, and scale it by the first image in the array
@@ -81,5 +102,50 @@ public class IFunny {
         }
         // return list
         return processed;
+    }
+
+    /**
+     * applies ifunny watermark to animated gif
+     * @param in animated gif to watermark
+     * @return watermarked animated gif
+     * @throws IOException if something blows up
+     */
+    private static byte[] Gif(byte[] in) throws IOException {
+        // set imageio cache to off
+        ImageIO.setUseCache(false);
+        // split gif into container
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
+        // create list of finished frames
+        List<GIFFrame> processed = new ArrayList<>();
+        // create object for first frame
+        GIFFrame frame1 = cont.getFrames().get(0);
+        // remove frame1 from origin list
+        cont.getFrames().remove(0);
+        // make new byte array stream for reuse later
+        ByteArrayOutputStream temp = new ByteArrayOutputStream();
+        // use imageio to write frame1 to it
+        ImageIO.write(frame1.getFrame(), "png", temp);
+        // process it and add it to the list
+        ByteArrayInputStream tempin = new ByteArrayInputStream(Raster(temp.toByteArray()));
+        processed.add(new GIFFrame(ImageIO.read(tempin), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
+        tempin.close();
+        // get the padded frames
+        List<BufferedImage> e = PadImages(cont.getRawFrames());
+        // add all of the frames to the list
+        for (int x = 0; x < e.size(); x++) {
+            processed.add(new GIFFrame(e.get(x), cont.getFrames().get(x).getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
+        }
+        // reset stream
+        temp.reset();
+        // write gif to it
+        try {
+            GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), temp);
+        } catch (Exception ex){
+            throw ErrorUtils.HandleiCafeError(ex);
+        }
+        // convert, close, return
+        byte[] done = temp.toByteArray();
+        temp.close();
+        return done;
     }
 }

@@ -1,4 +1,4 @@
-package com.eziosoft.jgetreal.Raster;
+package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 

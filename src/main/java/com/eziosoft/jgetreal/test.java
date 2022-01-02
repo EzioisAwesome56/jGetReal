@@ -1,8 +1,7 @@
 package com.eziosoft.jgetreal;
 
-import com.eziosoft.jgetreal.AnimatedGif.*;
-import com.eziosoft.jgetreal.Raster.*;
-import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Effects.*;
+import com.eziosoft.jgetreal.Objects.EffectResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,109 +13,47 @@ public class test {
     public static void main(String[] args) throws IOException {
         File f = new File(args[1]);
         byte[] hec = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
-        byte[] test = new byte[0];
+        EffectResult test = null;
         File out = null;
         switch (args[0]) {
-            case "static":
-                test = Caption.captionImage(hec, args[2]);
-                out = new File("dank.png");
+            case "bandicam":
+                test = Bandicam.Watermark(hec);
                 break;
-            case "gif":
-                test = GifCaptioner.CaptionGif(hec, args[2]);
-                out = new File("dank.gif");
-                break;
-            case "fuzz":
-                test = ImageFuzzer.FuzzImage(hec);
-                out = new File("fuz.png");
-                break;
-            case "sort":
-                test = ImageColorSorter.SortColorsOfImage(hec);
-                out = new File("sort.png");
-                break;
-            case "giffuzz":
-                test = GifFuzzer.FuzzGif(hec);
-                out = new File("dank.gif");
-                break;
-            case "spin":
-                test = Spin.spinRaster(hec);
-                out = new File("dank.gif");
-                break;
-            case "gifspin":
-                test = GifSpin.spinGif(hec);
-                out = new File("dank.gif");
-                break;
-            case "hypercam":
-                test = Hypercam2.Unregister(hec);
-                out = new File("dank.png");
-                break;
-            case "gifhypercam":
-                test = GifHypercam2.UnregisterGif(hec);
-                out = new File("dank.gif");
-                break;
-            case "gifcrap":
-                test = GifUtils.CrapifyGif(hec);
-                out = new File("dank.gif");
-                break;
-            case "stock":
-                test = ShutterStock.Stockify(hec);
-                out = new File("dank.png");
-                break;
-            case "gifstock":
-                test = GifShutterStock.StockifyGif(hec);
-                out = new File("dank.gif");
+            case "caption":
+                test = Caption.applyCaption(hec, args[1]);
                 break;
             case "funky":
-                test = Funky.Funk(hec);
-                out = new File("dank.png");
+                test = Funky.Watermark(hec);
                 break;
-            case "giffunky":
-                test = GifFunky.FunkGif(hec);
-                out = new File("dank.gif");
-                break;
-            case "invert":
-                test = Invert.InvertColors(hec);
-                out = new File("dank.png");
-                break;
-            case "gifinvert":
-                test = GIfInverter.InvertGif(hec);
-                out = new File("dank.gif");
+            case "hypercam2":
+                test = Hypercam2.Watermark(hec);
                 break;
             case "ifunny":
                 test = IFunny.Watermark(hec);
-                out = new File("dank.png");
                 break;
-            case "gififunny":
-                test = GifIFunny.WatermarkGif(hec);
-                out = new File("dank.gif");
+            case "fuzz":
+                test = ImageFuzzer.Fuzz(hec);
                 break;
-            case "bandicam":
-                test = Bandicam.Watermark(hec);
-                out = new File("dank.png");
+            case "invert":
+                test = Invert.Invert(hec);
                 break;
-            case "whodid":
-                test = WhoDid.This(hec);
-                out = new File("dank.png");
+            case "shutterstock":
+                test = ShutterStock.Watermark(hec);
                 break;
-            case "gifwhodid":
-                test = GifWhoDid.GifThis(hec);
-                out = new File("dank.gif");
+            case "spin":
+                test = Spin.spinImage(hec);
                 break;
-            case "gifbandicam":
-                test = GifBandicam.Watermark(hec);
-                out = new File("dank.gif");
+            case "touhoulook":
+                test = TouhouLook.Watermark(hec);
                 break;
-            case "2hu":
-                test = TouhouLook.Look(hec);
-                out = new File("dank.png");
-                break;
-            case "gif2hu":
-                test = GifTouhouLook.TouhoulookGif(hec);
-                out = new File("dank.gif");
+            case "whodidthis":
+                test = WhoDid.Meme(hec);
                 break;
             default:
-                System.err.println("Error: first argument must either be static or gif");
+                System.err.println("Error: please provide valid effect type!");
                 System.exit(-1);
         }
-        Files.write(Paths.get(out.getAbsolutePath()), test);
+        out = new File("dank." + test.getFiletype());
+        Files.write(Paths.get(out.getAbsolutePath()), test.getImage());
     }
 }

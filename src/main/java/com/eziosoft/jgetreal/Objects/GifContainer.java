@@ -1,4 +1,4 @@
-package com.eziosoft.jgetreal.objects;
+package com.eziosoft.jgetreal.Objects;
 
 import com.icafe4j.image.gif.GIFFrame;
 

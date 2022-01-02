@@ -1,6 +1,6 @@
 package com.eziosoft.jgetreal.Utils;
 
-import com.eziosoft.jgetreal.objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.icafe4j.image.gif.FrameReader;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;

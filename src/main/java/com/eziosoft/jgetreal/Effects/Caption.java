@@ -1,6 +1,12 @@
-package com.eziosoft.jgetreal.Raster;
+package com.eziosoft.jgetreal.Effects;
 
-import com.eziosoft.jgetreal.Utils.RasterUtils;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
+import com.eziosoft.jgetreal.Utils.FormatUtils;
+import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Objects.EffectResult;
+import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.icafe4j.image.gif.GIFFrame;
+import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -9,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Caption {
 
@@ -26,12 +33,26 @@ public class Caption {
     }
 
     /**
+     * detects what format the image is and runs it thru the correct watermarker
+     * @param in image to caption
+     * @param fuck caption text
+     * @return captioned image
+     * @throws IOException if something blows up, usually an imageio failure or unsupported image format errors
+     */
+    public static EffectResult applyCaption(byte[] in, String fuck) throws IOException{
+        // first get the image format type
+        String type = FormatUtils.getFormatName(in).toLowerCase(Locale.ROOT);
+        // then do shit based on format
+        return new EffectResult(type.contains("gif") ? CaptionGif(in, fuck) : captionImage(in, fuck), type.contains("gif") ? "gif" : "png");
+    }
+
+    /**
      * returns an image with 300px of transparent padding above the main content
      * @param in byte array of image you wish to pad
      * @return byte array of padded image, png format;
      * @throws IOException usually if an io error occurs or if something else blows up
      */
-    public static byte[] padImage(byte[] in) throws IOException {
+    private static byte[] padImage(byte[] in) throws IOException {
         ImageIO.setUseCache(false);
         ByteArrayInputStream streamin = new ByteArrayInputStream(in);
         BufferedImage source = ImageIO.read(streamin);
@@ -52,24 +73,13 @@ public class Caption {
     }
 
     /**
-     * captions an image, returns in jpeg format
-     * @param image byte array of image to caption
-     * @param text caption text
-     * @return byte array of captioned image; jpeg format
-     * @throws IOException if something blows up
-     */
-    public static byte[] captionAsJpeg(byte[] image, String text) throws IOException {
-        return RasterUtils.ConvertToJpeg(captionImage(image, text));
-    }
-
-    /**
      * captions an image with provided text
      * @param image byte array of image to caption
      * @param text string of text to caption image with
      * @return byte array of image with caption; png format
      * @throws IOException if imageio runs into a problem
      */
-    public static byte[] captionImage(byte[] image, String text, Color... col) throws IOException {
+    private static byte[] captionImage(byte[] image, String text, Color... col) throws IOException {
         ImageIO.setUseCache(false);
         // load image
         InputStream in = new ByteArrayInputStream(image);
@@ -169,5 +179,50 @@ public class Caption {
         byte[] done = hell.toByteArray();
         hell.close();
         return done;
+    }
+
+    /**
+     * Captions an animated gif
+     * @param in byte array of animated gif you wish to caption
+     * @param text text of caption
+     * @return byte array of captioned gif; obviously in gif format
+     * @throws IOException if something goes wrong somewhere
+     */
+    private static byte[] CaptionGif(byte[] in, String text) throws IOException {
+        ImageIO.setUseCache(false);
+        // split the gif into frames
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
+        // get first frame
+        GIFFrame frame1g = cont.getFrames().get(0);
+        cont.getFrames().remove(0);
+        // convert frame 1 to byte array
+        ByteArrayOutputStream helloneath = new ByteArrayOutputStream();
+        ImageIO.write(frame1g.getFrame(), "png", helloneath);
+        // add it to list
+        List<GIFFrame> list = new ArrayList<>();
+        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text, Color.GRAY));
+        // we need to multiply the delay by 10 to account for gif being a bad format
+        list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
+        for (GIFFrame gf : cont.getFrames()) {
+            // reset all streams
+            helloneath.reset();
+            stream.close();
+            // pad next frame
+            ImageIO.write(gf.getFrame(), "png", helloneath);
+            stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
+            // add it to list
+            list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
+        }
+        stream.close();
+        // reset stream so you can write to it
+        helloneath.reset();
+        try {
+            GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), helloneath);
+        } catch (Exception e) {
+            throw ErrorUtils.HandleiCafeError(e);
+        }
+        byte[] returnvar = helloneath.toByteArray();
+        helloneath.close();
+        return returnvar;
     }
 }
