@@ -13,6 +13,17 @@ import java.util.ArrayList;
 public class Caption {
 
     private static final int maxLines = 5;
+    private static Font captionfont;
+
+    static {
+        try {
+            captionfont = Font.createFont(Font.TRUETYPE_FONT, Caption.class.getResourceAsStream("/caption.ttf"));
+        } catch (FontFormatException | IOException e) {
+            System.err.println("Error while loading font!");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
 
     /**
      * returns an image with 300px of transparent padding above the main content
@@ -82,7 +93,11 @@ public class Caption {
         // set stroke type
         g.fillRect(0, 0, width, 300);
         // set the font and font color
-        Font font = new Font(Font.SERIF, Font.PLAIN, fontsize);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        ge.registerFont(captionfont);
+        //Font font = new Font(Font.SERIF, Font.PLAIN, fontsize);
+        // because im a lazy shit
+        Font font = captionfont.deriveFont(Font.PLAIN, fontsize);
         g.setFont(font);
         g.setColor(Color.BLACK);
         // get font metrics and render context
