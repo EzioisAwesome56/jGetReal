@@ -48,6 +48,37 @@ public class RasterUtils {
     }
 
     /**
+     * converts input raster to webp
+     * @param in raster to convert
+     * @return webp
+     * @throws IOException if something blows up
+     */
+    public static byte[] ConvertToWebp(byte[] in) throws IOException{
+        ImageIO.setUseCache(false);
+        InputStream streamin = new ByteArrayInputStream(in);
+        BufferedImage tojpeg = ImageIO.read(streamin);
+        streamin.close();
+        // create output buffered image
+        BufferedImage jpeg = new BufferedImage(tojpeg.getWidth(), tojpeg.getHeight(), BufferedImage.TYPE_INT_RGB);
+        // make graphics 2d
+        Graphics2D g = jpeg.createGraphics();
+        // draw image
+        g.drawImage(tojpeg, 0, 0, null);
+        // dispose of graphics 2d
+        g.dispose();
+        // write to output stream
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(jpeg, "webp", stream);
+        // convert to byte array
+        byte[] finish = stream.toByteArray();
+        // close stream
+        stream.flush();
+        stream.close();
+        // return
+        return finish;
+    }
+
+    /**
      * crapifies an image by outputing the lowest quality jpeg possible
      * @param in image to crapify
      * @return byte array of crapified image; jpeg format
