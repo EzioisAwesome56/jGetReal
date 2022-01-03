@@ -19,7 +19,13 @@ import java.util.Locale;
 
 public class Caption {
 
+    /**
+     * total number of lines for text until it starts going off the image
+     */
     private static final int maxLines = 5;
+    /**
+     * holding variable for the custom font we need to load
+     */
     private static Font captionfont;
 
     static {
