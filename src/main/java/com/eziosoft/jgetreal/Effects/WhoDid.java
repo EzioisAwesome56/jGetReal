@@ -81,6 +81,7 @@ public class WhoDid {
      * pads image to have empty spaces where the caption would be
      * @param in list of bufferedimages to pad
      * @return padded images
+     * @throws IOException if something blows up during the process
      */
     private static List<BufferedImage> PadFrames(List<BufferedImage> in) throws IOException{
         // set imageio cache to false
