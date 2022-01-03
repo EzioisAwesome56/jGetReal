@@ -91,7 +91,7 @@ public class Invert {
             // write frame to stream
             ImageIO.write(f.getFrame(), "png", temp);
             // add frame once processed
-            ByteArrayInputStream streamin = new ByteArrayInputStream(Invert.InvertColors(temp.toByteArray()));
+            ByteArrayInputStream streamin = new ByteArrayInputStream(InvertColors(temp.toByteArray()));
             imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
             streamin.close();
         }

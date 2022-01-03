@@ -28,7 +28,7 @@ public class FormatUtils {
         // make an iterator ig
         Iterator<ImageReader> imagereaders = ImageIO.getImageReaders(imgin);
         int total = IteratorUtils.size(imagereaders);
-        System.err.println(total);
+        System.err.println("Total format readers for this image: " + total);
         if (total < 1){
             throw new IOException("Unsupported image format!");
         }

@@ -70,7 +70,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>com.eziosoft.jgetreal.test</mainClass>
+                            <mainClass>com.eziosoft.jgetreal.jGetReal</mainClass>
                         </manifest>
                     </archive>
 

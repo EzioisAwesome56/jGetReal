@@ -1,6 +1,12 @@
 package com.eziosoft.jgetreal.Effects;
 
-import com.eziosoft.jgetreal.Utils.RasterUtils;
+import com.eziosoft.jgetreal.Objects.EffectResult;
+import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Utils.ErrorUtils;
+import com.eziosoft.jgetreal.Utils.FormatUtils;
+import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.icafe4j.image.gif.GIFFrame;
+import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,8 +17,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class ImageColorSorter {
+
+    /**
+     * sorts all the colors of an image
+     * @param in image to sort
+     * @return sorted image
+     * @throws IOException if something blows up anywhere during this mess
+     */
+    public static EffectResult Sort(byte[] in) throws IOException{
+        // first get the image format type
+        String type = FormatUtils.getFormatName(in).toLowerCase(Locale.ROOT);
+        // then do shit based on format
+        return new EffectResult(type.contains("gif") ? Gif(in) : SortColorsOfImage(in), type.contains("gif") ? "gif" : "png");
+    }
 
     /**
      * sorts colors of an image, then returns a image with the colors sorted painted on it
@@ -20,7 +40,7 @@ public class ImageColorSorter {
      * @return byte array of final image; png format;
      * @throws IOException if something blows uo
      */
-    public static byte[] SortColorsOfImage(byte[] image) throws IOException {
+    private static byte[] SortColorsOfImage(byte[] image) throws IOException {
         // disable imageio cache because thats cringe
         ImageIO.setUseCache(false);
         // get buffered image
@@ -58,7 +78,43 @@ public class ImageColorSorter {
         return finish;
     }
 
-    public static byte[] SortColorsOfImageToJpeg(byte[] image) throws IOException{
-        return RasterUtils.ConvertToJpeg(SortColorsOfImage(image));
+    /**
+     * sorts colors of an animated gif
+     * @param in gif to sort
+     * @return sorted gif
+     * @throws IOException if something stops working like it should
+     */
+    private static byte[] Gif(byte[] in) throws IOException{
+        // set imageio cache to false
+        ImageIO.setUseCache(false);
+        // get gif frames as container
+        GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
+        // create new list for processes frames
+        List<GIFFrame> imgs = new ArrayList<>();
+        // create reusable stream
+        ByteArrayOutputStream temp = new ByteArrayOutputStream();
+        // process every frame
+        for (GIFFrame f : cont.getFrames()){
+            // reset stream
+            temp.reset();
+            // write frame to stream
+            ImageIO.write(f.getFrame(), "png", temp);
+            // add frame once processed
+            ByteArrayInputStream streamin = new ByteArrayInputStream(SortColorsOfImage(temp.toByteArray()));
+            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
+            streamin.close();
+        }
+        // reset stream
+        temp.reset();
+        // output gif to the stream
+        try {
+            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
+        } catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
+        // convert to array, close, return
+        byte[] done = temp.toByteArray();
+        temp.close();
+        return done;
     }
 }
