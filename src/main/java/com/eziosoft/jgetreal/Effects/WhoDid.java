@@ -25,7 +25,7 @@ public class WhoDid {
     /**
      * detects image format and applies who did this meme to it
      * @param in image to meme
-     * @return meme'd image image
+     * @return meme'd image
      * @throws IOException if something blows up anywhere during this mess
      */
     public static EffectResult Meme(byte[] in) throws IOException{
