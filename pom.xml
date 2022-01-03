@@ -86,7 +86,13 @@
                     <archive>
                         <manifest>
                             <mainClass>com.eziosoft.jgetreal.jGetReal</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
+                        <manifestEntries>
+                            <Specification-Vendor>Eziosoft LLC</Specification-Vendor>
+                            <Implementation-Vendor>Eziosoft LLC</Implementation-Vendor>
+                        </manifestEntries>
                     </archive>
 
                 </configuration>
