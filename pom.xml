@@ -10,6 +10,10 @@
 
     <repositories>
         <repository>
+        <id>shit for jai_imageio</id>
+        <url>https://nexus.geomatys.com/repository/geotoolkit</url>
+    </repository>
+        <repository>
             <id>oss.sonatype.org</id>
             <name>Sonatype Snapshot Repository</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -27,6 +31,12 @@
             <groupId>com.github.dragon66</groupId>
             <artifactId>icafe</artifactId>
             <version>1.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.media</groupId>
+                    <artifactId>jai_imageio</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--<dependency>
             <groupId>commons-io</groupId>
@@ -47,6 +57,11 @@
             <groupId>org.sejda.webp-imageio</groupId>
             <artifactId>webp-imageio-sejda</artifactId>
             <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.media</groupId>
+            <artifactId>jai_imageio</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 
