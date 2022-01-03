@@ -45,48 +45,4 @@ public class GifUtils {
         stream.close();
         return cont;
     }
-
-    /**
-     * crapifies a gif
-     * @param in gif to crapify
-     * @return crapifyed gif
-     * @throws IOException if something blows up in the process
-     */
-    public static byte[] CrapifyGif(byte[] in) throws IOException {
-        // set imageio caching to false
-        ImageIO.setUseCache(false);
-        // get gif container
-        ByteArrayInputStream streamin = new ByteArrayInputStream(in);
-        GifContainer cont = splitAnimatedGifToContainer(streamin);
-        streamin.close();
-        // make list of processed frames
-        List<GIFFrame> imgs = new ArrayList<>();
-        // make new bytearray output stream for temp space
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        // process every frame
-        for (GIFFrame f : cont.getFrames()){
-            // reset stream
-            temp.reset();
-            // use imageIO to write to the stream
-            ImageIO.write(f.getFrame(), "png", temp);
-            // create new gifframe and add it to the list
-            streamin = new ByteArrayInputStream(RasterUtils.CrapifyImage(temp.toByteArray()));
-            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() *  10, f.getDisposalMethod()));
-            streamin.close();
-        }
-        // reset stream
-        temp.reset();
-        // write our animated gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw new IOException("Error occurred during GIF writing!", e);
-        }
-        // convert to byte array
-        byte[] done = temp.toByteArray();
-        // close the stream
-        temp.close();
-        // return
-        return done;
-    }
 }

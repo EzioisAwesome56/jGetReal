@@ -79,49 +79,6 @@ public class RasterUtils {
     }
 
     /**
-     * crapifies an image by outputing the lowest quality jpeg possible
-     * @param in image to crapify
-     * @return byte array of crapified image; jpeg format
-     * @throws IOException if something blows up
-     */
-    public static byte[] CrapifyImage(byte[] in) throws IOException {
-        // set imageio cache to false
-        ImageIO.setUseCache(false);
-        // prepare jpeg image writers and params
-        ImageWriter jpeg = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageWriteParam jpgparam = jpeg.getDefaultWriteParam();
-        // setup compression
-        jpgparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpgparam.setCompressionQuality(0.0f);
-        // prepare the stream that will be written to
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageOutputStream imgout = ImageIO.createImageOutputStream(out);
-        jpeg.setOutput(imgout);
-        // next, use imageIO to produce the "jpeg", first by reading the input image
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
-        // create new bufferedimage that is in jpeg format
-        BufferedImage jpegout = new BufferedImage(source.getWidth(), source.getHeight(),  BufferedImage.TYPE_INT_RGB);
-        // create graphics2d, draw source to it, then dipose of it
-        Graphics2D g = jpegout.createGraphics();
-        g.drawImage(source, null, 0, 0);
-        g.dispose();
-        // create new IIOImage object
-        IIOImage fuck = new IIOImage(jpegout, null, null);
-        // use jpegwriter to write this new image
-        jpeg.write(null, fuck, jpgparam);
-        // dispose of jpeg writer
-        jpeg.dispose();
-        // convert to byte array
-        byte[] done = out.toByteArray();
-        // close streams & return
-        out.close();
-        imgout.close();
-        return done;
-    }
-
-    /**
      * Mirros an image
      * @param in bufferedimage to mirror
      * @return mirrored buffered image
