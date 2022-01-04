@@ -20,11 +20,10 @@ public class jGetReal {
     public static HashMap<String,  ImageEffect> effects = new HashMap<>();
 
     /**
-     * main class for the entire program
-     * @param args command line arguments, pass any arguments to activate cli mode
-     * @throws IOException if something explodes
+     * inits the map of effects
+     * @throws IOException this should not happen, if it does, youve done something strange
      */
-    public static void main(String[] args) throws IOException {
+    public static void Initialize() throws IOException{
         System.out.println("Initializing, please wait...");
         AddEffect(new Bandicam());
         AddEffect(new Caption());
@@ -39,7 +38,17 @@ public class jGetReal {
         AddEffect(new Spin());
         AddEffect(new TouhouLook());
         AddEffect(new WhoDid());
+    }
+
+    /**
+     * main class for the entire program
+     * @param args command line arguments, pass any arguments to activate cli mode
+     * @throws IOException if something explodes
+     */
+    public static void main(String[] args) throws IOException {
+        Initialize();
         if (args.length < 1) {
+            System.out.println("Launching GUI...");
             EffectGUI.StartGUI();
         } else {
             // carry on as before
