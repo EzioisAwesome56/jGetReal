@@ -45,4 +45,21 @@ public class GifUtils {
         stream.close();
         return cont;
     }
+
+
+    public static byte[] ConvertToBytes(List<GIFFrame> in) throws IOException{
+        ImageIO.setUseCache(false);
+        // make output stream
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // write gif
+        try {
+            GIFTweaker.writeAnimatedGIF(in.toArray(new GIFFrame[]{}), out);
+        }  catch (Exception e){
+            throw ErrorUtils.HandleiCafeError(e);
+        }
+        // do the normal shit to ensure there are no memory leaks
+        byte[] done = out.toByteArray();
+        out.close();
+        return done;
+    }
 }

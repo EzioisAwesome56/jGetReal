@@ -1,10 +1,6 @@
 package com.eziosoft.jgetreal.Utils;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -45,6 +41,36 @@ public class RasterUtils {
         stream.close();
         // return
         return finish;
+    }
+
+    /**
+     * converts a bufferedimage to a byte array of given format
+     * @param in bufferedimage to convert
+     * @param format format name for imageio to write
+     * @return byte array
+     * @throws IOException if you make imageio explode somehow
+     */
+    public static byte[] ConvertToBytes(BufferedImage in, String format) throws IOException{
+        // set imageio cache to off
+        ImageIO.setUseCache(false);
+        // create new stream
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // write to it
+        ImageIO.write(in, format, out);
+        // do the usual thingo
+        byte[] done = out.toByteArray();
+        out.close();
+        return done;
+    }
+
+    /**
+     * overload for ConvertToBytes, always writes to png format
+     * @param in image to convert
+     * @return byte array in png format
+     * @throws IOException if you break imageio with your input data somehow
+     */
+    public static byte[] ConvertToBytes(BufferedImage in) throws IOException{
+        return ConvertToBytes(in, "png");
     }
 
     /**
