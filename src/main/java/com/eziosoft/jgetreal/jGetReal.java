@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class jGetReal {
@@ -17,7 +18,7 @@ public class jGetReal {
     /**
      * only important for the built-in gui; used to hold all possible effects
      */
-    public static List<ImageEffect> effects = new ArrayList<>();
+    public static HashMap<String,  ImageEffect> effects = new HashMap<>();
 
     /**
      * main class for the entire program
