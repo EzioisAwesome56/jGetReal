@@ -38,6 +38,7 @@ public class jGetReal {
         AddEffect(new Spin());
         AddEffect(new TouhouLook());
         AddEffect(new WhoDid());
+        AddEffect(new NineGag());
     }
 
     /**
