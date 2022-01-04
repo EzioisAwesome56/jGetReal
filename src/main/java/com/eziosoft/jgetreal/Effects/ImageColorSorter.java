@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ImageColorSorter {
+public class ImageColorSorter extends ImageEffect {
 
     /**
      * sorts all the colors of an image
@@ -116,5 +117,21 @@ public class ImageColorSorter {
         byte[] done = temp.toByteArray();
         temp.close();
         return done;
+    }
+
+    /**
+     * to be used by effect gui and/or cli and whatever else needs it i guess
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something crashes during the operation
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Sort(input);
+    }
+
+    public ImageColorSorter(){
+        this.name = "sort";
     }
 }

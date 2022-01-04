@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class TouhouLook {
+public class TouhouLook extends ImageEffect {
 
     /**
      * detects image format and applies touhou watermark to it
@@ -110,5 +111,21 @@ public class TouhouLook {
         byte[] done = temp.toByteArray();
         temp.close();
         return done;
+    }
+
+    /**
+     * did you know: x86 assembly is a curse to man. why does it exist in the first place
+     * @param input image to process
+     * @param caption caption text if required
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Watermark(input);
+    }
+
+    public TouhouLook(){
+        this.name = "touhoulook";
     }
 }

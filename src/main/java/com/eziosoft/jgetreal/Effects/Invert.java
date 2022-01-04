@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Invert {
+public class Invert extends ImageEffect {
 
     /**
      * detects image format and inverts it
@@ -107,5 +108,21 @@ public class Invert {
         byte[] done = temp.toByteArray();
         temp.close();
         return done;
+    }
+
+    /**
+     * i am not copying the same goddamn text again; go read my other javadoc comments
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something explodes
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Invert(input);
+    }
+
+    public Invert(){
+        this.name = "invert";
     }
 }

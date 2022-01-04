@@ -1,5 +1,6 @@
 package com.eziosoft.jgetreal.Effects;
 
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -20,7 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Funky {
+public class Funky extends ImageEffect {
+
+    /**
+     * to be used by the gui; run from an array of effects
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up during the process
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Watermark(input);
+    }
+
+    public Funky(){
+        this.name = "funky";
+        this.needscaption = false;
+    }
 
     /**
      * detects what format the image is and automatically runs it thru the correct parser

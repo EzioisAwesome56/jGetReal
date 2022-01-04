@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -20,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class IFunny {
+public class IFunny extends ImageEffect {
 
     /**
      * applies the ifunny watermark to provided image
@@ -147,5 +148,21 @@ public class IFunny {
         byte[] done = temp.toByteArray();
         temp.close();
         return done;
+    }
+
+    /**
+     * to be used by the effect gui
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something crashed during operation
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Watermark(input);
+    }
+
+    public IFunny(){
+        this.name = "ifunny";
     }
 }

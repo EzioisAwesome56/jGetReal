@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class ImageFuzzer {
+public class ImageFuzzer extends ImageEffect {
 
     /**
      * detects image format and fuzzes it
@@ -125,5 +126,21 @@ public class ImageFuzzer {
         temp.close();
         // return
         return finish;
+    }
+
+    /**
+     * to be used for gui or whatever else idfk youve seen this a million times already
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Fuzz(input);
+    }
+
+    public ImageFuzzer(){
+        this.name = "fuzz";
     }
 }

@@ -1,5 +1,6 @@
 package com.eziosoft.jgetreal.Effects;
 
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -17,7 +18,27 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class Caption {
+public class Caption extends ImageEffect {
+
+    /**
+     * to be used by the gui; for running the effect out of an array
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something dies during the process
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        if (caption.length < 1){
+            throw new IOException("No caption provided!");
+        }
+        return applyCaption(input, caption[0]);
+    }
+
+    public Caption(){
+        this.name = "caption";
+        this.needscaption = true;
+    }
 
     /**
      * total number of lines for text until it starts going off the image

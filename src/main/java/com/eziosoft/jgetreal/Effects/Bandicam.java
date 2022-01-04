@@ -1,5 +1,6 @@
 package com.eziosoft.jgetreal.Effects;
 
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Bandicam {
+public class Bandicam extends ImageEffect {
 
     /**
      * applies the bandicam watermark to provided image
@@ -108,5 +109,22 @@ public class Bandicam {
         byte[] done = stream.toByteArray();
         stream.close();
         return done;
+    }
+
+    /**
+     * to be used for the gui; runs the effect
+     * @param input image to process
+     * @param fuck caption text
+     * @return processed image
+     * @throws IOException if something blows up
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... fuck) throws IOException {
+        return Watermark(input);
+    }
+
+    public Bandicam(){
+        this.name = "bandicam";
+        this.needscaption = false;
     }
 }

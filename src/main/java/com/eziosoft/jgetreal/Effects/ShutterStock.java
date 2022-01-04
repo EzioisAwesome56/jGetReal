@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ShutterStock {
+public class ShutterStock extends ImageEffect {
 
     /**
      * detects image format and applies shutterstock watermark to it
@@ -105,5 +106,21 @@ public class ShutterStock {
         temp.close();
         // output it
         return done;
+    }
+
+    /**
+     * mayo is bad for you yknow
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Watermark(input);
+    }
+
+    public ShutterStock(){
+        this.name = "shutterstock";
     }
 }

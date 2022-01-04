@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Jpeg {
+public class Jpeg extends ImageEffect {
 
     /**
      * reduces the quality of the image as much as possible via jpeg compression
@@ -123,5 +124,21 @@ public class Jpeg {
         temp.close();
         // return
         return done;
+    }
+
+    /**
+     * oh my god i  dont care
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Crapify(input);
+    }
+
+    public Jpeg(){
+        this.name = "jpeg";
     }
 }

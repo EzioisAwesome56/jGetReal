@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Spin {
+public class Spin extends ImageEffect {
 
     /**
      * detects image format and spins it 360 degrees
@@ -140,5 +141,21 @@ public class Spin {
         out.close();
         // return
         return done;
+    }
+
+    /**
+     * did you know: Windows 98 is pretty cool
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up during the process
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return spinImage(input);
+    }
+
+    public Spin(){
+        this.name = "spin";
     }
 }

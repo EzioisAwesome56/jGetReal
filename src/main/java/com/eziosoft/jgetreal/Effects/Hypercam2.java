@@ -2,6 +2,7 @@ package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
@@ -19,7 +20,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Hypercam2 {
+public class Hypercam2 extends ImageEffect {
+
+    /**
+     * to be used by the effect gui/cli
+     * @param input image to process
+     * @param caption caption text if required
+     * @return processed image
+     * @throws IOException if something blows up somewhere
+     */
+    @Override
+    public EffectResult runImageEffect(byte[] input, String... caption) throws IOException {
+        return Watermark(input);
+    }
+
+    public Hypercam2(){
+        this.name = "hypercam2";
+    }
 
     /**
      * applies the hypercam2 watermark to provided image
