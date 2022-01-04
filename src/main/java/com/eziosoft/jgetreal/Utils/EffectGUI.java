@@ -2,6 +2,8 @@ package com.eziosoft.jgetreal.Utils;
 
 import com.eziosoft.jgetreal.Effects.*;
 import com.eziosoft.jgetreal.Objects.EffectResult;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
+import com.eziosoft.jgetreal.jGetReal;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class EffectGUI {
 
@@ -140,8 +145,8 @@ public class EffectGUI {
                 DisplayErrorBox("Output directory is actually a file!");
                 return;
             }
-            // check if the effect is caption, and if it is, check to see if they actually provided a caption
-            if (effects.getSelectedItem().equals("caption")){
+            // check if the effect requires a caption, and ensure the caption is provided
+            if (jGetReal.effects.get((String) effects.getSelectedItem()).needscaption){
                 if (caption.getText().isEmpty()){
                     DisplayErrorBox("No Caption provided!", "this effect required a caption!");
                     return;
@@ -171,8 +176,11 @@ public class EffectGUI {
      * @return list of strings; to be used by the jcombobox
      */
     private static String[] getEffectList(){
-        return new String[]{"bandicam", "caption", "funky", "hypercam2", "ifunny", "sort",
-        "fuzz", "invert", "shutterstock", "spin", "touhoulook", "whodidthis", "jpeg"};
+        List<String> effects = new ArrayList<>();
+        for (Map.Entry<String, ImageEffect> ent : jGetReal.effects.entrySet()){
+            effects.add(ent.getKey());
+        }
+        return effects.toArray(new String[]{});
     }
 
     /**
@@ -206,7 +214,7 @@ public class EffectGUI {
 
     /**
      * pop-up notifactions
-     * @param errortxt error text
+     * @param errortxt notification text text
      */
     private static void DisplayPopup(String... errortxt){
         final JFrame error = new JFrame("jGetReal Notification");
@@ -244,49 +252,16 @@ public class EffectGUI {
         // step 1: get byte array input stream for the provided input file
         byte[] source = Files.readAllBytes(Paths.get(in.getAbsolutePath()));
         // step 2: switch case our way to find what effect they wanted
-        EffectResult result = null;
-        switch (effect){
-            case "bandicam":
-                result = Bandicam.Watermark(source);
-                break;
-            case "caption":
-                result = Caption.applyCaption(source, caption);
-                break;
-            case "funky":
-                result = Funky.Watermark(source);
-                break;
-            case "hypercam2":
-                result = Hypercam2.Watermark(source);
-                break;
-            case "ifunny":
-                result = IFunny.Watermark(source);
-                break;
-            case "sort":
-                result = ImageColorSorter.Sort(source);
-                break;
-            case "fuzz":
-                result = ImageFuzzer.Fuzz(source);
-                break;
-            case "invert":
-                result = Invert.Invert(source);
-                break;
-            case "shutterstock":
-                result = ShutterStock.Watermark(source);
-                break;
-            case "spin":
-                result = Spin.spinImage(source);
-                break;
-            case "touhoulook":
-                result = TouhouLook.Watermark(source);
-                break;
-            case "jpeg":
-                result = Jpeg.Crapify(source);
-                break;
-            case "whodidthis":
-                result = WhoDid.Meme(source);
-                break;
-            default:
-                throw new IOException("Invalid effect selected!");
+        EffectResult result;
+        if (jGetReal.effects.containsKey(effect)){
+            ImageEffect eff = jGetReal.effects.get(effect);
+            if (eff.needscaption){
+                result = eff.runImageEffect(source, caption);
+            } else {
+                result = eff.runImageEffect(source);
+            }
+        } else {
+            throw new IOException("Invalid effect selected!");
         }
         // step 3; open output file for writing
         File out = new File(outdir, prefix + "." + result.getFiletype());
