@@ -40,6 +40,7 @@ public class jGetReal {
         AddEffect(new WhoDid());
         AddEffect(new NineGag());
         AddEffect(new GameXplain());
+        AddEffect(new Kinemaster());
     }
 
     /**
