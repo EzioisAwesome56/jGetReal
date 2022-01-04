@@ -2,14 +2,22 @@ package com.eziosoft.jgetreal;
 
 import com.eziosoft.jgetreal.Effects.*;
 import com.eziosoft.jgetreal.Objects.EffectResult;
+import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.EffectGUI;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class jGetReal {
+
+    /**
+     * only important for the built-in gui; used to hold all possible effects
+     */
+    public static List<ImageEffect> effects = new ArrayList<>();
 
     /**
      * main class for the entire program
