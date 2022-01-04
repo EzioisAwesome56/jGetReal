@@ -1,6 +1,5 @@
 package com.eziosoft.jgetreal.Utils;
 
-import com.eziosoft.jgetreal.Effects.*;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.jGetReal;
