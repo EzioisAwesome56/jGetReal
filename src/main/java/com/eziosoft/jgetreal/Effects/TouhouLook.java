@@ -117,7 +117,7 @@ public class TouhouLook extends ImageEffect {
      * did you know: x86 assembly is a curse to man. why does it exist in the first place
      * @param input image to process
      * @param caption caption text if required
-     * @return
+     * @return watermarked image
      * @throws IOException
      */
     @Override
