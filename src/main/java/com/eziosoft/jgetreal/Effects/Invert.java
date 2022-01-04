@@ -54,9 +54,9 @@ public class Invert extends ImageEffect {
         for (int y = 0; y < source.getHeight(); y++){
             for (int x = 0; x < source.getWidth(); x++){
                 // read color of pixel
-                Color col = new Color(source.getRGB(x, y));
+                Color col = new Color(source.getRGB(x, y), true);
                 // create new color, but invert it
-                Color outcol = new Color(Math.abs(col.getRed() - 255), Math.abs(col.getGreen() - 255), Math.abs(col.getBlue() - 255));
+                Color outcol = new Color(Math.abs(col.getRed() - 255), Math.abs(col.getGreen() - 255), Math.abs(col.getBlue() - 255), col.getAlpha());
                 // output color to output buffered image
                 out.setRGB(x, y, outcol.getRGB());
             }
