@@ -3,20 +3,15 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -65,32 +60,12 @@ public class NineGag  extends ImageEffect {
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // make new gif frame list
         List<GIFFrame> imgs = new ArrayList<>();
-        // setup the output stream
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         // produce the frames
         for (GIFFrame f : cont.getFrames()){
-            // reset the stream
-            temp.reset();
-            // write our image to it
-            ImageIO.write(f.getFrame(), "png", temp);
-            // add new frame to list
-            ByteArrayInputStream streamin = new ByteArrayInputStream(Raster(temp.toByteArray()));
-            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
-            streamin.close();
+            imgs.add(new GIFFrame(RasterUtils.ConvertToImage(Raster(RasterUtils.ConvertToBytes(f.getFrame()))), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
         }
-        // reset stream
-        temp.reset();
         // write gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to byte array and close it
-        byte[] done = temp.toByteArray();
-        temp.close();
-        // output it
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**
@@ -103,13 +78,9 @@ public class NineGag  extends ImageEffect {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // create buffered image of the source
-        InputStream instream = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(instream);
-        instream.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load watermark
-        instream = NineGag.class.getResourceAsStream("/9gag.png");
-        BufferedImage watermark = ImageIO.read(instream);
-        instream.close();
+        BufferedImage watermark = RasterUtils.loadResource("/9gag.png");
         // flip source
         source = RasterUtils.MirrorImage(source);
         // create graphics 2d
@@ -121,11 +92,6 @@ public class NineGag  extends ImageEffect {
         // flip image again
         source = RasterUtils.MirrorImage(source);
         // write output to stream
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(source, "png", out);
-        // convert to array, close, return
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(source);
     }
 }

@@ -1,22 +1,17 @@
 package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -63,13 +58,9 @@ public class Funky extends ImageEffect {
         // set imageio cache to false
         ImageIO.setUseCache(false);
         // load source buffered image
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load the watermark
-        streamin = Funky.class.getResourceAsStream("/funky.png");
-        BufferedImage kong = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage kong = RasterUtils.loadResource("/funky.png");
         // mirror source image
         source = RasterUtils.MirrorImage(source);
         // create graphics 2d context
@@ -98,22 +89,10 @@ public class Funky extends ImageEffect {
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // create new list for processes frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // create reusable stream
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         // process every frame
         for (GIFFrame f : cont.getFrames()) {
-            // reset stream
-            temp.reset();
-            // write frame to stream
-            ImageIO.write(f.getFrame(), "png", temp);
-            // add frame once processed
-            ByteArrayInputStream stream = new ByteArrayInputStream(Funky.Funk(temp.toByteArray()));
-            imgs.add(new GIFFrame(ImageIO.read(stream), f.getDelay() * 10, f.getDisposalMethod()));
-            stream.close();
+            imgs.add(new GIFFrame(RasterUtils.ConvertToImage(Funk(RasterUtils.ConvertToBytes(f.getFrame()))), f.getDelay() * 10, f.getDisposalMethod()));
         }
-        // reset stream
-        temp.reset();
-        temp.close();
         // output gif to the stream
         return GifUtils.ConvertToBytes(imgs);
     }

@@ -3,20 +3,16 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,13 +58,9 @@ public class Hypercam2 extends ImageEffect {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // load source image from byte array
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load hypercam2 watermark from resources
-        streamin = Hypercam2.class.getResourceAsStream("/hypercam.png");
-        BufferedImage hypercam = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage hypercam = RasterUtils.loadResource("/hypercam.png");
         // create graphics 2d context of the source image
         Graphics2D g = source.createGraphics();
         // draw hypercam onto the source image at 0,0
@@ -97,9 +89,7 @@ public class Hypercam2 extends ImageEffect {
         //process every frame
         for (GIFFrame f : cont.getFrames()){
             // create new GIF Frame from this data
-            streamin = new ByteArrayInputStream(Hypercam2.Unregister(RasterUtils.ConvertToBytes(f.getFrame())));
-            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
-            streamin.close();
+            imgs.add(new GIFFrame(RasterUtils.ConvertToImage(Unregister(RasterUtils.ConvertToBytes(f.getFrame()))), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         // write animated gif to it
         return GifUtils.ConvertToBytes(imgs);

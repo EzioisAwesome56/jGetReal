@@ -3,22 +3,17 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -47,13 +42,9 @@ public class IFunny extends ImageEffect {
         // set imageio cache to off
         ImageIO.setUseCache(false);
         // read both source image and watermark
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load the ifunny watermark and scale it by source's width
-        streamin = IFunny.class.getResourceAsStream("/ifunny.png");
-        BufferedImage ifunny = Scalr.resize(ImageIO.read(streamin), source.getWidth());
-        streamin.close();
+        BufferedImage ifunny = Scalr.resize(RasterUtils.loadResource("/ifunny.png"), source.getWidth());
         // create new output buffered image
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + ifunny.getHeight(), source.getType());
         // create graphics 2d for buffered image
@@ -78,9 +69,7 @@ public class IFunny extends ImageEffect {
         // turn imageio cache off
         ImageIO.setUseCache(false);
         // load the watermark, and scale it by the first image in the array
-        InputStream instream = IFunny.class.getResourceAsStream("/ifunny.png");
-        BufferedImage ifunny = Scalr.resize(ImageIO.read(instream), in.get(0).getWidth());
-        instream.close();
+        BufferedImage ifunny = Scalr.resize(RasterUtils.loadResource("/ifunny.png"), in.get(0).getWidth());
         // make new list
         List<BufferedImage> processed = new ArrayList<>();
         // make new image object
@@ -120,9 +109,7 @@ public class IFunny extends ImageEffect {
         // remove frame1 from origin list
         cont.getFrames().remove(0);
         // process it and add it to the list
-        ByteArrayInputStream tempin = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(frame1.getFrame())));
-        processed.add(new GIFFrame(ImageIO.read(tempin), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
-        tempin.close();
+        processed.add(new GIFFrame(RasterUtils.ConvertToImage(Raster(RasterUtils.ConvertToBytes(frame1.getFrame()))), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         // get the padded frames
         List<BufferedImage> e = PadImages(cont.getRawFrames());
         // add all of the frames to the list

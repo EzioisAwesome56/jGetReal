@@ -13,6 +13,7 @@ import com.icafe4j.image.gif.GIFTweaker;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,15 +47,9 @@ public class TouhouLook extends ImageEffect {
         // set imageio cache to OFF
         ImageIO.setUseCache(false);
         // make input stream
-        InputStream streamin;
-        // load source image
-        streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load watermark
-        streamin = TouhouLook.class.getResourceAsStream("/2hulook.png");
-        BufferedImage watermark = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage watermark = RasterUtils.loadResource("/2hulook.png");
         // rotate the source image
         source = RasterUtils.VerticalFlip(source);
         // create graphics instance
@@ -66,11 +61,7 @@ public class TouhouLook extends ImageEffect {
         // flip again
         source = RasterUtils.VerticalFlip(source);
         // output result
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(source, "png", out);
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(source);
     }
 
     /**
@@ -86,31 +77,12 @@ public class TouhouLook extends ImageEffect {
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // create new list for processes frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // create reusable stream
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         // process every frame
         for (GIFFrame f : cont.getFrames()) {
-            // reset stream
-            temp.reset();
-            // write frame to stream
-            ImageIO.write(f.getFrame(), "png", temp);
             // add frame once processed
-            ByteArrayInputStream stream = new ByteArrayInputStream(TouhouLook.Look(temp.toByteArray()));
-            imgs.add(new GIFFrame(ImageIO.read(stream), f.getDelay() * 10, f.getDisposalMethod()));
-            stream.close();
+            imgs.add(new GIFFrame(RasterUtils.ConvertToImage(Look(RasterUtils.ConvertToBytes(f.getFrame()))), f.getDelay() * 10, f.getDisposalMethod()));
         }
-        // reset stream
-        temp.reset();
-        // output gif to the stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to array, close, return
-        byte[] done = temp.toByteArray();
-        temp.close();
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**

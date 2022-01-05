@@ -59,7 +59,7 @@ public class jGetReal {
             File f = new File(args[1]);
             byte[] hec = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
             EffectResult test = null;
-            File out = null;
+            File out;
             if (effects.containsKey(args[0])){
                 ImageEffect eff = effects.get(args[0]);
                 if (eff.needscaption){

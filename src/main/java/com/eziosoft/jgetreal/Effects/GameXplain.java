@@ -12,9 +12,7 @@ import org.imgscalr.Scalr;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,11 +64,8 @@ public class GameXplain extends ImageEffect {
         // we have to process frame 1 separately so we can abuse gif shit
         GIFFrame frame1 = cont.getFrames().get(0);
         cont.getFrames().remove(0);
-        // then we need an input stream to process the first frame
-        InputStream instream = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(frame1.getFrame())));
         // add it to the list of processed frames
-        processed.add(new GIFFrame(ImageIO.read(instream), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
-        instream.close();
+        processed.add(new GIFFrame(RasterUtils.ConvertToImage(Raster(RasterUtils.ConvertToBytes(frame1.getFrame()))), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         // obtain padded frames
         List<BufferedImage> padded = PadAndBorderFrames(cont.getRawFrames());
         // add all the frames to the array
@@ -94,9 +89,7 @@ public class GameXplain extends ImageEffect {
         // make new list for processed frames
         List<BufferedImage> processed = new ArrayList<>();
         // load the game xplain border now
-        InputStream in = GameXplain.class.getResourceAsStream("/gxborder.png");
-        BufferedImage border = ImageIO.read(in);
-        in.close();
+        BufferedImage border = RasterUtils.loadResource("/gxborder.png");
         // process each frame, one by one
         for (BufferedImage s : frames){
             // first, create new buffered image
@@ -128,19 +121,13 @@ public class GameXplain extends ImageEffect {
         // turn imageio cache off
         ImageIO.setUseCache(false);
         // load source image
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // resize source to match dimensions of border
         source = Scalr.resize(source, Scalr.Mode.FIT_EXACT, 1200, 592);
         // load border
-        streamin = GameXplain.class.getResourceAsStream("/gxborder.png");
-        BufferedImage border = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage border = RasterUtils.loadResource("/gxborder.png");
         // load logo
-        streamin = GameXplain.class.getResourceAsStream("/gxlogo.png");
-        BufferedImage logo = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage logo = RasterUtils.loadResource("/gxlogo.png");
         // create new buffered image of original gx template size
         BufferedImage product = new BufferedImage(1200, 675, BufferedImage.TYPE_4BYTE_ABGR);
         // create graphics context for it

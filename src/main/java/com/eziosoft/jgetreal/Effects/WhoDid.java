@@ -3,20 +3,16 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,19 +41,11 @@ public class WhoDid extends ImageEffect {
     private static byte[] This(byte[] in) throws IOException {
         // set imageio cache to off
         ImageIO.setUseCache(false);
-        // make an input stream for later
-        InputStream streamin;
         // load in the source image
-        streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // load the 2 pieces of the watermark
-        streamin = WhoDid.class.getResourceAsStream("/whodidthis_top.png");
-        BufferedImage top = Scalr.resize(ImageIO.read(streamin), source.getWidth());
-        streamin.close();
-        streamin = WhoDid.class.getResourceAsStream("/whodidthis_bottom.png");
-        BufferedImage bottom = Scalr.resize(ImageIO.read(streamin), source.getWidth());
-        streamin.close();
+        BufferedImage top = Scalr.resize(RasterUtils.loadResource("/whodidthis_top.png"), source.getWidth());
+        BufferedImage bottom = Scalr.resize(RasterUtils.loadResource("/whodidthis_bottom.png"), source.getWidth());
         // create new buffered image to output the results too
         BufferedImage out = new BufferedImage(source.getWidth(), source.getHeight() + top.getHeight() + bottom.getHeight(), source.getType());
         // create graphics context for this new image
@@ -71,11 +59,7 @@ public class WhoDid extends ImageEffect {
         // dispose
         g.dispose();
         // write and output result
-        ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-        ImageIO.write(out, "png", streamout);
-        byte[] done = streamout.toByteArray();
-        streamin.close();
-        return done;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -88,13 +72,8 @@ public class WhoDid extends ImageEffect {
         // set imageio cache to false
         ImageIO.setUseCache(false);
         // load both top and bottom for math reasons
-        InputStream streamin;
-        streamin = WhoDid.class.getResourceAsStream("/whodidthis_top.png");
-        BufferedImage top = Scalr.resize(ImageIO.read(streamin), in.get(0).getWidth());
-        streamin.close();
-        streamin = WhoDid.class.getResourceAsStream("/whodidthis_bottom.png");
-        BufferedImage bottom = Scalr.resize(ImageIO.read(streamin), in.get(0).getHeight());
-        streamin.close();
+        BufferedImage top = Scalr.resize(RasterUtils.loadResource("/whodidthis_top.png"), in.get(0).getWidth());
+        BufferedImage bottom = Scalr.resize(RasterUtils.loadResource("/whodidthis_bottom.png"), in.get(0).getHeight());
         // create list for output images
         List<BufferedImage> newlist = new ArrayList<>();
         // process all the frames
@@ -129,14 +108,7 @@ public class WhoDid extends ImageEffect {
         cont.getFrames().remove(0);
         // for later: make list of new frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // use imageIO to write the first frame's data to a stream
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        InputStream tempin;
-        ImageIO.write(frameone.getFrame(), "png", temp);
-        // convert back to buffered image
-        tempin = new ByteArrayInputStream(This(temp.toByteArray()));
-        BufferedImage why = ImageIO.read(tempin);
-        tempin.close();
+        BufferedImage why = RasterUtils.ConvertToImage(This(RasterUtils.ConvertToBytes(frameone.getFrame())));
         // add it to the new array for frames
         imgs.add(new GIFFrame(why, frameone.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         // get list of padded buffered images
@@ -145,18 +117,7 @@ public class WhoDid extends ImageEffect {
         for (int x = 0; x < padded.size(); x++){
             imgs.add(new GIFFrame(padded.get(x), cont.getFrames().get(x).getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
-        // reset the stream from eariler
-        temp.reset();
-        // write gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert, close, return, etc
-        byte[] done = temp.toByteArray();
-        temp.close();
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**

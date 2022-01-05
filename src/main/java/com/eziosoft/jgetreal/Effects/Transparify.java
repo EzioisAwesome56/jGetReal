@@ -1,21 +1,14 @@
 package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.EffectResult;
-import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
-import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
-import com.icafe4j.image.gif.GIFFrame;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class Transparify extends ImageEffect {
@@ -45,20 +38,6 @@ public class Transparify extends ImageEffect {
         /*  FIXME: this doesnt work with gifs like at all, either find out why or
                    remove it entirely! */
         throw new IOException("GIF is not supported by this effect!");
-        /*// turn imageio caching off
-        ImageIO.setUseCache(false);
-        // get all frames of the gif
-        GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
-        // make list of processed frames
-        List<GIFFrame> processed = new ArrayList<>();
-        // process every frame
-        for (GIFFrame f : cont.getFrames()){
-            InputStream instream = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(f.getFrame())));
-            processed.add(new GIFFrame(ImageIO.read(instream), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
-            instream.close();
-        }
-        // return the gif as bytes
-        return GifUtils.ConvertToBytes(processed);*/
     }
 
     /**
@@ -71,10 +50,7 @@ public class Transparify extends ImageEffect {
         // turn off imageio caching
         ImageIO.setUseCache(false);
         // load buffered image
-        InputStream instream = new ByteArrayInputStream(in);
-        // use imageio to read it
-        BufferedImage source = ImageIO.read(instream);
-        instream.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // create new buffered image with transparency enabled
         BufferedImage product = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         // loop thru every pixel, get its color value, set transparency to half, paint to output image

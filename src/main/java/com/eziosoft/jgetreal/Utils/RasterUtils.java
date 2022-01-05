@@ -64,6 +64,35 @@ public class RasterUtils {
     }
 
     /**
+     * converts byte array into buffered image; properly closes streams and such
+     * @param arr byte array to convert
+     * @return buffered image
+     * @throws IOException if something blows up; probably ImageIO at it again
+     */
+    public static BufferedImage ConvertToImage(byte[] arr) throws IOException{
+        ImageIO.setUseCache(false);
+        InputStream instream = new ByteArrayInputStream(arr);
+        BufferedImage source = ImageIO.read(instream);
+        instream.close();
+        return source;
+    }
+
+    /**
+     * correctly loads a resource and closes all streams
+     * @param filename resource to load
+     * @return loaded resource
+     * @throws IOException thrown if Imageio doesnt like the input
+     */
+    public static BufferedImage loadResource(String filename) throws IOException{
+        // create input stream
+        ImageIO.setUseCache(false);
+        InputStream in = RasterUtils.class.getResourceAsStream(filename);
+        BufferedImage out = ImageIO.read(in);
+        in.close();
+        return out;
+    }
+
+    /**
      * overload for ConvertToBytes, always writes to png format
      * @param in image to convert
      * @return byte array in png format

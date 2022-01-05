@@ -79,11 +79,7 @@ public class Kinemaster extends ImageEffect {
         // unmirror the image
         source = RasterUtils.MirrorImage(source);
         // convert to byte array and return that
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(source, "png", out);
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(source);
     }
 
     /**
@@ -101,32 +97,14 @@ public class Kinemaster extends ImageEffect {
         streamin.close();
         // make array to hold processed frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // make byte array that will be reused over and over
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         //process every frame
         for (GIFFrame f : cont.getFrames()){
-            // clear stream
-            temp.reset();
-            // use imageio to write current frame to it
-            ImageIO.write(f.getFrame(), "png", temp);
             // create new GIF Frame from this data
-            streamin = new ByteArrayInputStream(Raster(temp.toByteArray()));
+            streamin = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(f.getFrame())));
             imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
             streamin.close();
         }
-        // reset the stream
-        temp.reset();
         // write animated gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert stream to byte array
-        byte[] done = temp.toByteArray();
-        // close stream
-        temp.close();
-        // and we're done
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 }

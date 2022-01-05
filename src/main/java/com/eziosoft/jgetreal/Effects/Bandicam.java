@@ -1,22 +1,17 @@
 package com.eziosoft.jgetreal.Effects;
 
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,16 +40,10 @@ public class Bandicam extends ImageEffect {
     private static byte[] Raster(byte[] in) throws IOException {
         // turn caching off
         ImageIO.setUseCache(false);
-        // create stream
-        InputStream streamin;
         // load source image
-        streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // read the watermark
-        streamin = Bandicam.class.getResourceAsStream("/bandicam.png");
-        BufferedImage watermark = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage watermark = RasterUtils.loadResource("/bandicam.png");
         // create graphics context
         Graphics2D g = source.createGraphics();
         // draw watermark
@@ -78,25 +67,11 @@ public class Bandicam extends ImageEffect {
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // create list of new frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // create streams
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        InputStream streamin;
         // process frames
         for (GIFFrame f : cont.getFrames()){
-            // reset
-            stream.reset();
-            // first, right current frame to output array
-            ImageIO.write(f.getFrame(), "png", stream);
-            // then, apply watermark to image
-            streamin = new ByteArrayInputStream(Raster(stream.toByteArray()));
             // add result to the list
-            imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
-            // close stream
-            streamin.close();
+            imgs.add(new GIFFrame(RasterUtils.ConvertToImage(Raster(RasterUtils.ConvertToBytes(f.getFrame()))), f.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
         }
-        // reset output stream
-        stream.reset();
-        stream.close();
         // write finished gif to stream
         return GifUtils.ConvertToBytes(imgs);
     }

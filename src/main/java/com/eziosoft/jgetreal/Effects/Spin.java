@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -47,9 +48,7 @@ public class Spin extends ImageEffect {
         // create list of buffered images to be filled later
         List<GIFFrame> imgs = new ArrayList<>();
         // read source image from provided byte array
-        InputStream streamin = new ByteArrayInputStream(in);
-        BufferedImage source = ImageIO.read(streamin);
-        streamin.close();
+        BufferedImage source = RasterUtils.ConvertToImage(in);
         // get dimensions of source
         int h = source.getHeight();
         int w = source.getWidth();
@@ -69,19 +68,7 @@ public class Spin extends ImageEffect {
             imgs.add(new GIFFrame(temp, 50, GIFFrame.DISPOSAL_RESTORE_TO_BACKGROUND));
         }
         // create new byteoutputstream
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // write gif to stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert tp byte array
-        byte[] done = out.toByteArray();
-        // close stream
-        out.close();
-        // return
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**
@@ -128,19 +115,7 @@ public class Spin extends ImageEffect {
             count++;
         }
         // create output stream to store gif in
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // write gif to stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), out);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert tp byte array
-        byte[] done = out.toByteArray();
-        // close stream
-        out.close();
-        // return
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**
