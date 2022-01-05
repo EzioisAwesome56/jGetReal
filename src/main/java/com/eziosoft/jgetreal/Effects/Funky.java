@@ -81,12 +81,8 @@ public class Funky extends ImageEffect {
         // mirror the image again
         source = RasterUtils.MirrorImage(source);
         // output to stream
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(source, "png", out);
-        // convert to byte array, close, return
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(source);
+
     }
 
     /**
@@ -117,15 +113,8 @@ public class Funky extends ImageEffect {
         }
         // reset stream
         temp.reset();
-        // output gif to the stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to array, close, return
-        byte[] done = temp.toByteArray();
         temp.close();
-        return done;
+        // output gif to the stream
+        return GifUtils.ConvertToBytes(imgs);
     }
 }
