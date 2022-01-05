@@ -34,7 +34,7 @@ public class TouhouLook extends ImageEffect {
         // first get the image format type
         String type = FormatUtils.getFormatName(in).toLowerCase(Locale.ROOT);
         // then do shit based on format
-        return new EffectResult(type.contains("gif") ? TouhoulookGif(in) : Look(in), "gif");
+        return new EffectResult(type.contains("gif") ? TouhoulookGif(in) : Look(in), type.contains("gif") ? "gif" : "png");
     }
 
     /**
