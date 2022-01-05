@@ -42,6 +42,7 @@ public class jGetReal {
         AddEffect(new GameXplain());
         AddEffect(new Kinemaster());
         AddEffect(new Transparify());
+        AddEffect(new Avs4You());
     }
 
     /**
