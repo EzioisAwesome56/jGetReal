@@ -29,7 +29,7 @@ public class WhoDid extends ImageEffect {
         // first get the image format type
         String type = FormatUtils.getFormatName(in).toLowerCase(Locale.ROOT);
         // then do shit based on format
-        return new EffectResult(type.contains("gif") ? GifThis(in) : This(in), "gif");
+        return new EffectResult(type.contains("gif") ? GifThis(in) : This(in), type.contains("gif") ? "gif" : "png");
     }
 
     /**
