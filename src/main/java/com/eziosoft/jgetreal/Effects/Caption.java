@@ -207,6 +207,7 @@ public class Caption extends ImageEffect {
      * @throws IOException if something goes wrong somewhere
      */
     private static byte[] CaptionGif(byte[] in, String text) throws IOException {
+        // TODO: simplify this a lot more then it already is
         ImageIO.setUseCache(false);
         // split the gif into frames
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
@@ -232,6 +233,7 @@ public class Caption extends ImageEffect {
             list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         stream.close();
+        helloneath.close();
         // reset stream so you can write to it
         return GifUtils.ConvertToBytes(list);
     }
