@@ -207,33 +207,27 @@ public class Caption extends ImageEffect {
      * @throws IOException if something goes wrong somewhere
      */
     private static byte[] CaptionGif(byte[] in, String text) throws IOException {
-        // TODO: simplify this a lot more then it already is
         ImageIO.setUseCache(false);
         // split the gif into frames
         GifContainer cont = GifUtils.splitAnimatedGifToContainer(in);
         // get first frame
         GIFFrame frame1g = cont.getFrames().get(0);
         cont.getFrames().remove(0);
-        // convert frame 1 to byte array
-        ByteArrayOutputStream helloneath = new ByteArrayOutputStream();
-        ImageIO.write(frame1g.getFrame(), "png", helloneath);
+        // convert frame 1 to byte array & add it to list
         // add it to list
         List<GIFFrame> list = new ArrayList<>();
-        ByteArrayInputStream stream = new ByteArrayInputStream(Caption.captionImage(helloneath.toByteArray(), text, Color.GRAY));
+        ByteArrayInputStream stream = new ByteArrayInputStream(captionImage(RasterUtils.ConvertToBytes(frame1g.getFrame()), text, Color.GRAY));
         // we need to multiply the delay by 10 to account for gif being a bad format
         list.add(new GIFFrame(ImageIO.read(stream), frame1g.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         for (GIFFrame gf : cont.getFrames()) {
             // reset all streams
-            helloneath.reset();
             stream.close();
             // pad next frame
-            ImageIO.write(gf.getFrame(), "png", helloneath);
-            stream = new ByteArrayInputStream(padImage(helloneath.toByteArray()));
+            stream = new ByteArrayInputStream(padImage(RasterUtils.ConvertToBytes(gf.getFrame())));
             // add it to list
             list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         stream.close();
-        helloneath.close();
         // reset stream so you can write to it
         return GifUtils.ConvertToBytes(list);
     }
