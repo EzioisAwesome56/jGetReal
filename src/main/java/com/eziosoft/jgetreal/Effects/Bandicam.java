@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -61,11 +62,7 @@ public class Bandicam extends ImageEffect {
         // dipose of graphics
         g.dispose();
         // output image via the normal ways
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(source, "png", out);
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(source);
     }
 
     /**
@@ -99,16 +96,9 @@ public class Bandicam extends ImageEffect {
         }
         // reset output stream
         stream.reset();
-        // write finished gif to stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), stream);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert, close, return
-        byte[] done = stream.toByteArray();
         stream.close();
-        return done;
+        // write finished gif to stream
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**

@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -92,11 +93,7 @@ public class Caption extends ImageEffect {
         // throw graphics 2d in the trash
         g.dispose();
         // convert to byte array
-        ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-        ImageIO.write(out, "png", outstream);
-        byte[] dank = outstream.toByteArray();
-        outstream.close();
-        return dank;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -199,13 +196,7 @@ public class Caption extends ImageEffect {
         // dispose of graphics 2d
         g.dispose();
         // convert to byte array
-        ByteArrayOutputStream hell = new ByteArrayOutputStream();
-        hell.flush();
-        ImageIO.setUseCache(false);
-        ImageIO.write(out, "png", hell);
-        byte[] done = hell.toByteArray();
-        hell.close();
-        return done;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -236,20 +227,12 @@ public class Caption extends ImageEffect {
             stream.close();
             // pad next frame
             ImageIO.write(gf.getFrame(), "png", helloneath);
-            stream = new ByteArrayInputStream(Caption.padImage(helloneath.toByteArray()));
+            stream = new ByteArrayInputStream(padImage(helloneath.toByteArray()));
             // add it to list
             list.add(new GIFFrame(ImageIO.read(stream), gf.getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         stream.close();
         // reset stream so you can write to it
-        helloneath.reset();
-        try {
-            GIFTweaker.writeAnimatedGIF(list.toArray(new GIFFrame[]{}), helloneath);
-        } catch (Exception e) {
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        byte[] returnvar = helloneath.toByteArray();
-        helloneath.close();
-        return returnvar;
+        return GifUtils.ConvertToBytes(list);
     }
 }
