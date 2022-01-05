@@ -7,7 +7,6 @@ import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GifUtils {

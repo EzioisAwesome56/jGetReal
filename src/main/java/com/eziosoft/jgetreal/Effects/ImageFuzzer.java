@@ -3,14 +3,12 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 
 import javax.imageio.ImageIO;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,18 +51,24 @@ public class ImageFuzzer extends ImageEffect {
         for (int x = 0; x < buf.getHeight(); x++){
             rows.add(new ArrayList<Integer>());
         }
+        // make a list to store each and every pixel
+        List<Integer> all = new ArrayList<>();
         // next, get each pixel and hold it in the list
         for (int y = 0; y < buf.getHeight(); y++){
             for (int x = 0; x < buf.getWidth(); x++){
-                rows.get(y).add(buf.getRGB(x, y));
+                all.add(buf.getRGB(x, y));
             }
         }
-        // fuzz each list of pixels
-        for (List<Integer> list : rows){
-            Collections.shuffle(list);
+        // fuzz all the pixels
+        Collections.shuffle(all);
+        // put the pixels into each row
+        int count = 0;
+        for (int y = 0; y < buf.getHeight(); y++){
+            for (int x = 0; x < buf.getWidth(); x++){
+                rows.get(y).add(all.get(count));
+                count++;
+            }
         }
-        // also fuzz the rows themselves
-        Collections.shuffle(rows);
         // create new bufferedimage for output
         BufferedImage out = new BufferedImage(buf.getWidth(), buf.getHeight(), buf.getType());
         // output fuzzed data to buffered image
@@ -74,16 +78,7 @@ public class ImageFuzzer extends ImageEffect {
             }
         }
         // create stream to write too
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // write to it
-        ImageIO.write(out, "png", stream);
-        // convert to byte array
-        byte[] result = stream.toByteArray();
-        // close stream
-        stream.flush();
-        stream.close();
-        // return data
-        return result;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -100,32 +95,14 @@ public class ImageFuzzer extends ImageEffect {
         streamin.close();
         // make new list of gifFrames
         List<GIFFrame> processed = new ArrayList<>();
-        // process each frame
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         for (GIFFrame f : cont.getFrames()){
-            // flush old streams
-            temp.reset();
-            // write to output stream
-            ImageIO.write(f.getFrame(), "png", temp);
             // put new frame into the list
-            streamin = new ByteArrayInputStream(ImageFuzzer.FuzzImage(temp.toByteArray()));
+            streamin = new ByteArrayInputStream(FuzzImage(RasterUtils.ConvertToBytes(f.getFrame())));
             processed.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
             streamin.close();
         }
-        // flush old data out of temp
-        temp.reset();
         // create the animated gif
-        try {
-            GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to byte array
-        byte[] finish = temp.toByteArray();
-        // close stream
-        temp.close();
-        // return
-        return finish;
+        return GifUtils.ConvertToBytes(processed);
     }
 
     /**

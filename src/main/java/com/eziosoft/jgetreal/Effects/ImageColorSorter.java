@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -68,15 +69,7 @@ public class ImageColorSorter extends ImageEffect {
             }
         }
         // write image to output stream
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(out, "png", stream);
-        // convert stream to byte array
-        byte[] finish = stream.toByteArray();
-        // get rid of the stream
-        stream.flush();
-        stream.close();
-        // return it
-        return finish;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -107,16 +100,7 @@ public class ImageColorSorter extends ImageEffect {
         }
         // reset stream
         temp.reset();
-        // output gif to the stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to array, close, return
-        byte[] done = temp.toByteArray();
-        temp.close();
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**

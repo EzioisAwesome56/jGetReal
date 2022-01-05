@@ -97,33 +97,15 @@ public class Jpeg extends ImageEffect {
         streamin.close();
         // make list of processed frames
         List<GIFFrame> imgs = new ArrayList<>();
-        // make new bytearray output stream for temp space
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         // process every frame
         for (GIFFrame f : cont.getFrames()){
-            // reset stream
-            temp.reset();
-            // use imageIO to write to the stream
-            ImageIO.write(f.getFrame(), "png", temp);
             // create new gifframe and add it to the list
-            streamin = new ByteArrayInputStream(CrapifyImage(temp.toByteArray()));
+            streamin = new ByteArrayInputStream(CrapifyImage(RasterUtils.ConvertToBytes(f.getFrame())));
             imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() *  10, f.getDisposalMethod()));
             streamin.close();
         }
-        // reset stream
-        temp.reset();
         // write our animated gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw new IOException("Error occurred during GIF writing!", e);
-        }
-        // convert to byte array
-        byte[] done = temp.toByteArray();
-        // close the stream
-        temp.close();
-        // return
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**

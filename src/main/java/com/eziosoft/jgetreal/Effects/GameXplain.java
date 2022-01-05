@@ -3,18 +3,16 @@ package com.eziosoft.jgetreal.Effects;
 import com.eziosoft.jgetreal.Objects.EffectResult;
 import com.eziosoft.jgetreal.Objects.GifContainer;
 import com.eziosoft.jgetreal.Objects.ImageEffect;
-import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
-import com.icafe4j.image.gif.GIFTweaker;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -68,12 +66,8 @@ public class GameXplain extends ImageEffect {
         // we have to process frame 1 separately so we can abuse gif shit
         GIFFrame frame1 = cont.getFrames().get(0);
         cont.getFrames().remove(0);
-        // next, we need to convert the frame data to a byte array
-        ByteArrayOutputStream tempout = new ByteArrayOutputStream();
-        ImageIO.write(frame1.getFrame(), "png", tempout);
         // then we need an input stream to process the first frame
-        InputStream instream = new ByteArrayInputStream(Raster(tempout.toByteArray()));
-        tempout.reset();
+        InputStream instream = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(frame1.getFrame())));
         // add it to the list of processed frames
         processed.add(new GIFFrame(ImageIO.read(instream), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         instream.close();
@@ -84,15 +78,7 @@ public class GameXplain extends ImageEffect {
             processed.add(new GIFFrame(padded.get(x), cont.getFrames().get(x).getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
         // create new animated gif
-        try {
-            GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), tempout);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert, close, return
-        byte[] done = tempout.toByteArray();
-        tempout.close();
-        return done;
+        return GifUtils.ConvertToBytes(processed);
     }
 
     /**
@@ -168,10 +154,6 @@ public class GameXplain extends ImageEffect {
         // get rid of graphics 2d
         g.dispose();
         // convert to byte array and return it
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(product, "png", out);
-        byte[] done = out.toByteArray();
-        out.close();
-        return done;
+        return RasterUtils.ConvertToBytes(product);
     }
 }

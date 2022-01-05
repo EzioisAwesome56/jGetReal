@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 import org.imgscalr.Scalr;
@@ -64,11 +65,7 @@ public class IFunny extends ImageEffect {
         // dispose of graphics
         g.dispose();
         // create output stream, write to it, dispose of it, return
-        ByteArrayOutputStream dank = new ByteArrayOutputStream();
-        ImageIO.write(out, "png", dank);
-        byte[] done = dank.toByteArray();
-        dank.close();
-        return done;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -122,12 +119,8 @@ public class IFunny extends ImageEffect {
         GIFFrame frame1 = cont.getFrames().get(0);
         // remove frame1 from origin list
         cont.getFrames().remove(0);
-        // make new byte array stream for reuse later
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
-        // use imageio to write frame1 to it
-        ImageIO.write(frame1.getFrame(), "png", temp);
         // process it and add it to the list
-        ByteArrayInputStream tempin = new ByteArrayInputStream(Raster(temp.toByteArray()));
+        ByteArrayInputStream tempin = new ByteArrayInputStream(Raster(RasterUtils.ConvertToBytes(frame1.getFrame())));
         processed.add(new GIFFrame(ImageIO.read(tempin), frame1.getDelay() * 10, GIFFrame.DISPOSAL_LEAVE_AS_IS));
         tempin.close();
         // get the padded frames
@@ -136,18 +129,8 @@ public class IFunny extends ImageEffect {
         for (int x = 0; x < e.size(); x++) {
             processed.add(new GIFFrame(e.get(x), cont.getFrames().get(x).getDelay() * 10, GIFFrame.DISPOSAL_RESTORE_TO_PREVIOUS));
         }
-        // reset stream
-        temp.reset();
         // write gif to it
-        try {
-            GIFTweaker.writeAnimatedGIF(processed.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception ex){
-            throw ErrorUtils.HandleiCafeError(ex);
-        }
-        // convert, close, return
-        byte[] done = temp.toByteArray();
-        temp.close();
-        return done;
+        return GifUtils.ConvertToBytes(processed);
     }
 
     /**

@@ -6,6 +6,7 @@ import com.eziosoft.jgetreal.Objects.ImageEffect;
 import com.eziosoft.jgetreal.Utils.ErrorUtils;
 import com.eziosoft.jgetreal.Utils.FormatUtils;
 import com.eziosoft.jgetreal.Utils.GifUtils;
+import com.eziosoft.jgetreal.Utils.RasterUtils;
 import com.icafe4j.image.gif.GIFFrame;
 import com.icafe4j.image.gif.GIFTweaker;
 
@@ -62,12 +63,7 @@ public class Invert extends ImageEffect {
             }
         }
         // create stream and write output to it
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ImageIO.write(out, "png", stream);
-        // convert, close, return
-        byte[] done = stream.toByteArray();
-        stream.close();
-        return done;
+        return RasterUtils.ConvertToBytes(out);
     }
 
     /**
@@ -84,30 +80,15 @@ public class Invert extends ImageEffect {
         // create new list for processes frames
         List<GIFFrame> imgs = new ArrayList<>();
         // create reusable stream
-        ByteArrayOutputStream temp = new ByteArrayOutputStream();
         // process every frame
         for (GIFFrame f : cont.getFrames()){
-            // reset stream
-            temp.reset();
-            // write frame to stream
-            ImageIO.write(f.getFrame(), "png", temp);
             // add frame once processed
-            ByteArrayInputStream streamin = new ByteArrayInputStream(InvertColors(temp.toByteArray()));
+            ByteArrayInputStream streamin = new ByteArrayInputStream(InvertColors(RasterUtils.ConvertToBytes(f.getFrame())));
             imgs.add(new GIFFrame(ImageIO.read(streamin), f.getDelay() * 10, f.getDisposalMethod()));
             streamin.close();
         }
-        // reset stream
-        temp.reset();
         // output gif to the stream
-        try {
-            GIFTweaker.writeAnimatedGIF(imgs.toArray(new GIFFrame[]{}), temp);
-        } catch (Exception e){
-            throw ErrorUtils.HandleiCafeError(e);
-        }
-        // convert to array, close, return
-        byte[] done = temp.toByteArray();
-        temp.close();
-        return done;
+        return GifUtils.ConvertToBytes(imgs);
     }
 
     /**
